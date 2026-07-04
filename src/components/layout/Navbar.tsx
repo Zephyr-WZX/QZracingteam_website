@@ -15,6 +15,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
+  const navRef = useRef<HTMLElement>(null)
   const menuItemsRef = useRef<(HTMLButtonElement | null)[]>([])
   const overlayRef = useRef<HTMLDivElement>(null)
 
@@ -30,10 +31,18 @@ export default function Navbar() {
     setMenuOpen(false)
   }, [location.pathname])
 
-  // 打开/关闭菜单时的 body 滚动锁 & 动画
+  // 打开/关闭菜单时的滚动锁 & 动画
   useEffect(() => {
+    const html = document.documentElement
+    const nav = navRef.current
+    if (!nav) return
+
     if (menuOpen) {
-      document.body.style.overflow = 'hidden'
+      const scrollbarW = window.innerWidth - html.clientWidth
+      html.style.overflow = 'hidden'
+      html.style.paddingRight = `${scrollbarW}px`
+      nav.style.paddingRight = `${scrollbarW}px`
+
       const ctx = gsap.context(() => {
         gsap.set(overlayRef.current, { display: 'flex' })
         gsap.fromTo(
@@ -47,8 +56,11 @@ export default function Navbar() {
           { opacity: 1, x: 0, stagger: 0.07, duration: 0.6, ease: 'power3.out', delay: 0.15 },
         )
       })
+
       return () => {
-        document.body.style.overflow = ''
+        html.style.overflow = ''
+        html.style.paddingRight = ''
+        nav.style.paddingRight = ''
         ctx.revert()
       }
     }
@@ -80,6 +92,7 @@ export default function Navbar() {
 
   return (
     <nav
+      ref={navRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled ? 'bg-black/90 backdrop-blur-xl py-3' : 'bg-transparent py-5'
       }`}
@@ -95,33 +108,66 @@ export default function Navbar() {
           <span className="text-white/80 font-medium ml-1">RACING</span>
         </Link>
 
-        {/* ===== 右侧：联系我们 胶囊 + 菜单 ===== */}
-        <div className="flex items-center gap-4">
-          {/* 联系我们 胶囊按钮 */}
+        {/* ===== 右侧：两颗毛玻璃胶囊 ===== */}
+        <div className="flex items-center gap-3">
+          {/* 胶囊底衬样式复用 */}
+          <style>{`
+            .nav-capsule {
+              display: flex; align-items: center; justify-content: center;
+              height: 40px; border-radius: 9999px;
+              background: rgba(255,255,255,0.04);
+              backdrop-filter: blur(12px);
+              -webkit-backdrop-filter: blur(12px);
+              border: 1px solid rgba(255,255,255,0.08);
+              color: rgba(255,255,255,0.7);
+              transition: all 0.35s ease;
+              cursor: pointer; outline: none;
+            }
+            .nav-capsule:hover {
+              background: rgba(255,255,255,0.08);
+              border-color: rgba(0,107,179,0.4);
+              color: #fff;
+            }
+          `}</style>
+
+          {/* 联系我们 */}
           <button
             onClick={() => handleMenuClick('contact')}
-            className="px-5 py-2 rounded-full border border-white/20 text-white/80 text-sm font-medium tracking-wider hover:border-primary-light hover:text-primary-light transition-all duration-300"
+            className="nav-capsule px-5 text-xs font-medium tracking-wider"
           >
             联系我们
           </button>
 
-          {/* 菜单 汉堡 */}
+          {/* 菜单 / 关闭 — 纯图标，40×40 正方，展开时提升到 overlay 之上 */}
           <button
             onClick={() => setMenuOpen((prev) => !prev)}
-            className="flex items-center gap-2 text-sm font-medium tracking-wider text-white/80 hover:text-primary-light transition-colors duration-300"
-            aria-label="切换菜单"
+            className="nav-capsule w-10 relative"
+            style={{ zIndex: menuOpen ? 60 : 'auto' }}
+            aria-label={menuOpen ? '关闭菜单' : '打开菜单'}
           >
-            <span>{menuOpen ? '关闭' : '菜单'}</span>
-            <div className="flex flex-col gap-1.5 w-5 h-4 justify-center">
+            <div className="relative w-[18px] h-[12px]">
+              {/* 顶线 */}
               <span
-                className={`block h-[1.5px] bg-current transition-all duration-300 ${
-                  menuOpen ? 'rotate-45 translate-y-[5px] w-5' : 'w-5'
-                }`}
+                className="absolute left-0 top-0 w-full h-[1.5px] bg-current rounded-full transition-all duration-350"
+                style={{
+                  transform: menuOpen
+                    ? 'translateY(5.25px) rotate(45deg)'
+                    : 'translateY(0) rotate(0deg)',
+                }}
               />
+              {/* 中线 */}
               <span
-                className={`block h-[1.5px] bg-current transition-all duration-300 ${
-                  menuOpen ? '-rotate-45 -translate-y-[5px] w-5' : 'w-3 ml-auto'
-                }`}
+                className="absolute left-0 top-[5.25px] w-full h-[1.5px] bg-current rounded-full transition-all duration-350"
+                style={{ opacity: menuOpen ? 0 : 1, transform: menuOpen ? 'scaleX(0)' : 'scaleX(1)' }}
+              />
+              {/* 底线 */}
+              <span
+                className="absolute left-0 top-[10.5px] w-full h-[1.5px] bg-current rounded-full transition-all duration-350"
+                style={{
+                  transform: menuOpen
+                    ? 'translateY(-5.25px) rotate(-45deg)'
+                    : 'translateY(0) rotate(0deg)',
+                }}
               />
             </div>
           </button>
@@ -140,17 +186,6 @@ export default function Navbar() {
           }
         }}
       >
-        {/* 关闭按钮 */}
-        <button
-          onClick={closeMenu}
-          className="absolute top-8 right-8 w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 transition-all duration-300"
-          aria-label="关闭菜单"
-        >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M5 5l10 10M15 5L5 15" />
-          </svg>
-        </button>
-
         <div className="section-container w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 md:gap-y-6">
             {MENU_ITEMS.map((item, i) => (

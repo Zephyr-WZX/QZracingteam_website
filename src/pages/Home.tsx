@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { FadeUp, CurtainReveal } from '@/components/animation'
+import GridScan from '@/components/GridScan'
 
 /* ================================================================
    首页 — 单页面滚动式布局
@@ -66,8 +67,25 @@ export default function Home() {
         id="hero"
         className="relative h-screen flex items-center justify-center overflow-hidden bg-black"
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,75,145,0.12)_0%,transparent_70%)]" />
+        {/* GridScan 3D 网格背景 */}
+        <GridScan
+          sensitivity={0.45}
+          lineThickness={1.2}
+          linesColor="#3A6AAA"
+          gridScale={0.1}
+          scanColor="#5599DD"
+          scanOpacity={0.55}
+          scanDirection="pingpong"
+          scanGlow={0.5}
+          scanSoftness={1.5}
+          scanDuration={2.5}
+          scanDelay={3.0}
+          enablePost={false}
+          bloomIntensity={0}
+          chromaticAberration={0}
+          noiseIntensity={0.005}
+        />
+        <div className="absolute inset-0 z-[2] bg-gradient-to-b from-black/30 via-transparent to-black pointer-events-none" />
 
         <div className="relative z-10 text-center section-container">
           <p className="hero-sub text-sm md:text-base tracking-[0.3em] text-white/60 mb-6">
