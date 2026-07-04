@@ -103,12 +103,39 @@
   /* 页面过渡帷幕 */
   .curtain {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0;
     z-index: 9999;
     background: #004B91;
-    transform: scaleY(0);
-    transform-origin: top;
     pointer-events: none;
+    overflow: hidden;
+    clip-path: polygon(
+      0% 0%,
+      100% 0%,
+      100% calc(100% - var(--curve, 0) * 30vh),
+      95% calc(100% - var(--curve, 0) * 0.81 * 30vh),
+      90% calc(100% - var(--curve, 0) * 0.64 * 30vh),
+      85% calc(100% - var(--curve, 0) * 0.49 * 30vh),
+      80% calc(100% - var(--curve, 0) * 0.36 * 30vh),
+      75% calc(100% - var(--curve, 0) * 0.25 * 30vh),
+      70% calc(100% - var(--curve, 0) * 0.16 * 30vh),
+      65% calc(100% - var(--curve, 0) * 0.09 * 30vh),
+      60% calc(100% - var(--curve, 0) * 0.04 * 30vh),
+      55% calc(100% - var(--curve, 0) * 0.01 * 30vh),
+      50% 100%,
+      45% calc(100% - var(--curve, 0) * 0.01 * 30vh),
+      40% calc(100% - var(--curve, 0) * 0.04 * 30vh),
+      35% calc(100% - var(--curve, 0) * 0.09 * 30vh),
+      30% calc(100% - var(--curve, 0) * 0.16 * 30vh),
+      25% calc(100% - var(--curve, 0) * 0.25 * 30vh),
+      20% calc(100% - var(--curve, 0) * 0.36 * 30vh),
+      15% calc(100% - var(--curve, 0) * 0.49 * 30vh),
+      10% calc(100% - var(--curve, 0) * 0.64 * 30vh),
+      5%  calc(100% - var(--curve, 0) * 0.81 * 30vh),
+      0%  calc(100% - var(--curve, 0) * 30vh)
+    );
   }
 
   /* 图片遮罩动效 */

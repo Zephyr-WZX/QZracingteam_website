@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { FadeUp, CurtainReveal } from '@/components/animation'
+import NextRace from '@/components/NextRace'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -55,6 +56,12 @@ export default function Home() {
           { opacity: 0, y: 30 },
           { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 1.1 },
         )
+        // 右侧赛事倒计时入场
+        gsap.fromTo(
+          '.hero-race',
+          { opacity: 0, x: 60 },
+          { opacity: 1, x: 0, duration: 1, ease: 'power4.out', delay: 0.8 },
+        )
 
         // === 核心：pin + scrub ===
         const tl = gsap.timeline({
@@ -100,8 +107,9 @@ export default function Home() {
         // 暗角
         tl.fromTo('.hero-vignette', { opacity: 0.75 }, { opacity: 0.18, ease: 'power2.in', duration: 1 }, 0)
 
-        // 文字渐隐
-        tl.to('.hero-content', { opacity: 0, y: -60, ease: 'power2.in', duration: 0.5 }, 0.15)
+        // 文字 & 赛事倒计时 向两侧退场
+        tl.to('.hero-content', { opacity: 0, x: -80, ease: 'power2.in', duration: 0.5 }, 0.15)
+        tl.to('.hero-race', { opacity: 0, x: 80, ease: 'power2.in', duration: 0.5 }, 0.15)
 
         // 滚动指示器
         tl.to('.scroll-indicator', { opacity: 0, duration: 0.25 }, 0.03)
@@ -127,7 +135,7 @@ export default function Home() {
       <section
         ref={heroRef}
         id="hero"
-        className="relative h-screen flex items-center justify-center bg-black"
+        className="relative h-screen flex items-center justify-between bg-black"
       >
         {/* 赛车背景图 — overflow-hidden 裁剪缩放溢出 */}
         <div className="hero-image absolute inset-0 z-0 overflow-hidden">
@@ -166,7 +174,7 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 z-[5] h-1/3 bg-gradient-to-t from-black to-transparent pointer-events-none" />
 
         {/* 文字内容 — 中英混合，不对称排版 */}
-        <div className="hero-content relative z-10 section-container">
+        <div className="hero-content relative z-10 pl-12 md:pl-20 lg:pl-28">
           {/* 顶部标签行 */}
           <div className="mb-8 md:mb-12">
             <p className="hero-sub text-[10px] md:text-xs tracking-[0.35em] text-white/40">
@@ -187,23 +195,24 @@ export default function Home() {
                 style={{ fontFamily: 'Georgia, serif' }}>
                 ×
               </span>
+              <span className="hero-title text-lg md:text-2xl lg:text-3xl text-white/30 tracking-[0.2em] font-bold whitespace-nowrap self-end translate-y-1 -translate-x-1"
+                style={{ marginBottom: '0.15em' }}>
+                QZ RACING
+              </span>
             </div>
             <div className="flex items-baseline gap-x-6 md:gap-x-10 -mt-2 md:-mt-4">
               <span className="text-display-lg md:text-display-xl lg:text-[12rem] primary-text tracking-tight">
                 车队
               </span>
-              <span className="text-sm md:text-lg text-white/30 tracking-[0.2em] font-medium whitespace-nowrap">
-                QZ RACING
-              </span>
             </div>
           </h1>
 
           {/* 标语 — 中英双行右对齐 */}
-          <div className="mt-10 md:mt-14 flex flex-col items-end">
-            <p className="text-base md:text-xl text-white/50 font-light tracking-[0.15em] leading-relaxed">
+          <div className="mt-10 md:mt-14 flex flex-col items-start">
+            <p className="hero-sub text-base md:text-xl text-white/50 font-light tracking-[0.15em] leading-relaxed">
               做难而正确的事情
             </p>
-            <p className="text-[11px] md:text-sm text-white/20 tracking-[0.3em] mt-2">
+            <p className="hero-sub text-[11px] md:text-sm text-white/20 tracking-[0.3em] mt-2">
               DO THE HARD THING RIGHT
             </p>
           </div>
@@ -221,6 +230,11 @@ export default function Home() {
               联系我们
             </a>
           </div>
+        </div>
+
+        {/* 右侧 — NEXT RACE 倒计时 */}
+        <div className="hero-race relative z-10 pr-12 md:pr-20 lg:pr-28">
+          <NextRace />
         </div>
 
         {/* 底部滚动提示 */}
