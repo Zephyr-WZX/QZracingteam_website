@@ -60,7 +60,7 @@ export default function Sponsors() {
             </p>
             <a
               href="/contact"
-              className="inline-block mt-8 px-8 py-3 bg-primary text-white font-semibold text-sm uppercase tracking-wider rounded-full hover:bg-primary-light transition-all duration-300"
+              className="btn-glass mt-8 px-8 py-3 text-sm tracking-wider rounded-full"
             >
               联系我们
             </a>

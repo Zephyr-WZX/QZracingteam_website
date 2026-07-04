@@ -63,6 +63,24 @@
     text-shadow: 0 0 30px rgba(0, 75, 145, 0.3);
   }
 
+  /* 统一毛玻璃按钮：无边框 + 高斯模糊 + 微透底 */
+  .btn-glass {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: none;
+    color: rgba(255,255,255,0.85);
+    cursor: pointer;
+    transition: all 0.35s ease;
+  }
+  .btn-glass:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+  }
+
   .primary-underline {
     position: relative;
   }

@@ -61,7 +61,7 @@ export default function Home() {
           scrollTrigger: {
             trigger: section,
             start: 'top top',
-            end: '+=300%',
+            end: '+=150%',
             pin: true,
             pinSpacing: true,
             scrub: 1,
@@ -179,13 +179,13 @@ export default function Home() {
           <div className="hero-cta mt-12 flex items-center justify-center gap-6">
             <a
               href="#cars"
-              className="px-8 py-3 bg-primary text-white font-semibold text-sm tracking-wider rounded-full hover:bg-primary-light transition-all duration-300 hover:scale-105"
+              className="btn-glass px-8 py-3 text-white/85 font-semibold text-sm tracking-wider rounded-full"
             >
               探索赛车
             </a>
             <a
               href="#contact"
-              className="px-8 py-3 border border-white/20 text-white/80 font-medium text-sm tracking-wider rounded-full hover:border-primary-light hover:text-primary-light transition-all duration-300"
+              className="btn-glass px-8 py-3 text-white/85 font-semibold text-sm tracking-wider rounded-full"
             >
               联系我们
             </a>
@@ -397,7 +397,7 @@ export default function Home() {
               </p>
               <a
                 href="#contact"
-                className="inline-block mt-8 px-8 py-3 bg-primary text-white font-semibold text-sm tracking-wider rounded-full hover:bg-primary-light transition-all duration-300"
+                className="btn-glass mt-8 px-8 py-3 text-sm tracking-wider rounded-full"
               >
                 联系我们
               </a>
@@ -468,7 +468,7 @@ export default function Home() {
                   </div>
                   <button
                     type="submit"
-                    className="w-full py-3 bg-primary text-white font-semibold text-sm tracking-wider rounded-full hover:bg-primary-light transition-all duration-300"
+                    className="btn-glass w-full py-3 font-semibold text-sm tracking-wider rounded-full"
                   >
                     发送
                   </button>
