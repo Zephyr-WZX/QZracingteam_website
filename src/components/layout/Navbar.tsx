@@ -246,7 +246,9 @@ export default function Navbar() {
               WebkitBackdropFilter: 'blur(24px) saturate(1.8)',
             }}
           />
-          <div className="section-container w-full py-24 md:py-0 md:h-full md:flex md:items-center relative z-[1]">
+
+          {/* 内容容器 */}
+          <div className="section-container w-full py-24 md:py-0 md:h-full md:flex md:items-center relative z-[2]">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 md:gap-y-6">
               {MENU_ITEMS.map((item, i) => (
                 <button

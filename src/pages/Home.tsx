@@ -165,18 +165,49 @@ export default function Home() {
         {/* 底部渐变过渡 */}
         <div className="absolute inset-x-0 bottom-0 z-[5] h-1/3 bg-gradient-to-t from-black to-transparent pointer-events-none" />
 
-        {/* 文字内容 — 图片亮起后渐隐上移 */}
-        <div className="hero-content relative z-10 text-center section-container">
-          <p className="hero-sub text-sm md:text-base tracking-[0.3em] text-white/60 mb-6">
-            QZ Racing Team &middot; Formula Student
-          </p>
-          <h1 className="hero-title text-display-md md:text-display-lg lg:text-display-xl font-black text-white tracking-tighter">
-            速度<span className="primary-text">&middot;</span>激情
+        {/* 文字内容 — 中英混合，不对称排版 */}
+        <div className="hero-content relative z-10 section-container">
+          {/* 顶部标签行 */}
+          <div className="mb-8 md:mb-12">
+            <p className="hero-sub text-[10px] md:text-xs tracking-[0.35em] text-white/40">
+              ZHEJIANG UNIVERSITY
+            </p>
+            <p className="hero-sub text-[10px] md:text-xs tracking-[0.25em] text-white/25 mt-1">
+              FORMULA STUDENT TEAM
+            </p>
+          </div>
+
+          {/* 主标题 — 两行不对称 */}
+          <h1 className="hero-title font-black text-white leading-none">
+            <div className="flex flex-wrap items-baseline gap-x-4 md:gap-x-8">
+              <span className="text-display-lg md:text-display-xl lg:text-[12rem] tracking-tight">
+                启真
+              </span>
+              <span className="text-[2rem] md:text-[3.5rem] lg:text-[4.5rem] text-white/20 font-light tracking-[0.15em] italic"
+                style={{ fontFamily: 'Georgia, serif' }}>
+                ×
+              </span>
+            </div>
+            <div className="flex items-baseline gap-x-6 md:gap-x-10 -mt-2 md:-mt-4">
+              <span className="text-display-lg md:text-display-xl lg:text-[12rem] primary-text tracking-tight">
+                车队
+              </span>
+              <span className="text-sm md:text-lg text-white/30 tracking-[0.2em] font-medium whitespace-nowrap">
+                QZ RACING
+              </span>
+            </div>
           </h1>
-          <p className="hero-sub mt-8 text-lg md:text-xl text-white/60 max-w-xl mx-auto leading-relaxed">
-            以工程创新驱动极限，用团队协作征服赛道
-          </p>
-          <div className="hero-cta mt-12 flex items-center justify-center gap-6">
+
+          {/* 标语 — 中英双行右对齐 */}
+          <div className="mt-10 md:mt-14 flex flex-col items-end">
+            <p className="text-base md:text-xl text-white/50 font-light tracking-[0.15em] leading-relaxed">
+              做难而正确的事情
+            </p>
+            <p className="text-[11px] md:text-sm text-white/20 tracking-[0.3em] mt-2">
+              DO THE HARD THING RIGHT
+            </p>
+          </div>
+          <div className="hero-cta mt-12 flex items-center gap-6">
             <a
               href="#cars"
               className="btn-glass px-8 py-3 text-white/85 font-semibold text-sm tracking-wider rounded-full"
