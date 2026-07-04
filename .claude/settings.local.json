@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(deep-research)",
+      "Skill(deep-research:*)",
+      "WebSearch",
+      "WebFetch(domain:www.brandfetch.com)",
+      "WebFetch(domain:www.news18.com)"
+    ]
+  }
+}

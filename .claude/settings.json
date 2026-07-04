@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:tympanus.net)",
+      "WebFetch(domain:codewebbarcelona.com)",
+      "WebFetch(domain:accessify.com)",
+      "WebFetch(domain:news.cadillacanz.com)",
+      "WebFetch(domain:www.soudan.cc)",
+      "WebFetch(domain:calibreapp.com)",
+      "WebFetch(domain:www.catchpoint.com)",
+      "WebFetch(domain:www.cadillac.com)",
+      "WebFetch(domain:jakearchibald.com)"
+    ]
+  }
+}
