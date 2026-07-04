@@ -9,7 +9,7 @@ export default function Contact() {
           <div>
             <FadeUp>
               <h1 className="text-display-md font-black tracking-tighter">
-                联系<span className="neon-text">我们</span>
+                联系<span className="primary-text">我们</span>
               </h1>
             </FadeUp>
             <FadeUp delay={0.2}>
@@ -54,7 +54,7 @@ export default function Contact() {
                     <input
                       type={field.type}
                       placeholder={field.placeholder}
-                      className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-neon/50 transition-colors duration-300"
+                      className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-primary/50 transition-colors duration-300"
                     />
                   </div>
                 ))}
@@ -65,12 +65,12 @@ export default function Contact() {
                   <textarea
                     rows={5}
                     placeholder="写下你想说的话..."
-                    className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-neon/50 transition-colors duration-300 resize-none"
+                    className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-primary/50 transition-colors duration-300 resize-none"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3 bg-neon text-black font-semibold text-sm uppercase tracking-wider rounded-full hover:bg-neon-dim transition-all duration-300"
+                  className="w-full py-3 bg-primary text-white font-semibold text-sm uppercase tracking-wider rounded-full hover:bg-primary-light transition-all duration-300"
                 >
                   发送
                 </button>

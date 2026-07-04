@@ -12,7 +12,7 @@ export default function Sponsors() {
       <div className="section-container">
         <FadeUp>
           <h1 className="text-display-md font-black tracking-tighter">
-            合作<span className="neon-text">伙伴</span>
+            合作<span className="primary-text">伙伴</span>
           </h1>
         </FadeUp>
         <FadeUp delay={0.2}>
@@ -37,7 +37,7 @@ export default function Sponsors() {
                     {tierSponsors.map((sponsor) => (
                       <div
                         key={sponsor.id}
-                        className="aspect-[3/2] bg-white/[0.02] rounded-xl border border-white/5 flex items-center justify-center hover:border-neon/20 transition-all duration-500"
+                        className="aspect-[3/2] bg-white/[0.02] rounded-xl border border-white/5 flex items-center justify-center hover:border-primary/30 transition-all duration-500"
                       >
                         <span className="text-white/10 text-sm tracking-wider">
                           {sponsor.name}
@@ -60,7 +60,7 @@ export default function Sponsors() {
             </p>
             <a
               href="/contact"
-              className="inline-block mt-8 px-8 py-3 bg-neon text-black font-semibold text-sm uppercase tracking-wider rounded-full hover:bg-neon-dim transition-all duration-300"
+              className="inline-block mt-8 px-8 py-3 bg-primary text-white font-semibold text-sm uppercase tracking-wider rounded-full hover:bg-primary-light transition-all duration-300"
             >
               联系我们
             </a>

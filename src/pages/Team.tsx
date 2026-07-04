@@ -13,7 +13,7 @@ export default function Team() {
       <div className="section-container">
         <FadeUp>
           <h1 className="text-display-md font-black tracking-tighter">
-            我们的<span className="neon-text">队员</span>
+            我们的<span className="primary-text">队员</span>
           </h1>
         </FadeUp>
         <FadeUp delay={0.2}>
@@ -26,7 +26,7 @@ export default function Team() {
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {TEAM_MEMBERS.map((member, i) => (
             <FadeUp key={member.id} delay={i * 0.08}>
-              <div className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-neon/20 transition-all duration-500">
+              <div className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/30 transition-all duration-500">
                 {/* 头像占位 */}
                 <div className="aspect-square rounded-xl bg-white/[0.03] flex items-center justify-center mb-5 overflow-hidden">
                   <span className="text-white/10 text-4xl group-hover:scale-110 transition-transform duration-500">
@@ -34,7 +34,7 @@ export default function Team() {
                   </span>
                 </div>
                 <h3 className="text-lg font-bold tracking-tight">{member.name}</h3>
-                <p className="mt-1 text-sm text-neon/80">{member.role}</p>
+                <p className="mt-1 text-sm text-primary-light/80">{member.role}</p>
                 <p className="mt-1 text-xs text-white/20">{member.dept}</p>
               </div>
             </FadeUp>

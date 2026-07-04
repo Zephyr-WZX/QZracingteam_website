@@ -26,8 +26,8 @@
   }
 
   ::selection {
-    background-color: #D2FF00;
-    color: #0A0A0A;
+    background-color: #004B91;
+    color: #ffffff;
   }
 
   ::-webkit-scrollbar {
@@ -37,38 +37,45 @@
     background: #0A0A0A;
   }
   ::-webkit-scrollbar-thumb {
-    background: #333;
+    background: #1a1a2e;
     border-radius: 3px;
   }
 }
 
 /* ===== 工具类 ===== */
 @layer components {
+  /* 主内容容器 — 宽幅 */
   .section-container {
-    @apply max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20;
+    @apply mx-auto px-5 md:px-8 lg:px-12;
+    max-width: 1800px;
   }
 
-  .neon-text {
-    color: #D2FF00;
-    text-shadow: 0 0 40px rgba(210, 255, 0, 0.3);
+  /* 窄内容容器 — 文字为主时用 */
+  .section-container-narrow {
+    @apply max-w-[1100px] mx-auto px-5 md:px-8 lg:px-12;
   }
 
-  .neon-underline {
+  .primary-text {
+    color: #3388CC;
+    text-shadow: 0 0 30px rgba(0, 75, 145, 0.3);
+  }
+
+  .primary-underline {
     position: relative;
   }
-  .neon-underline::after {
+  .primary-underline::after {
     content: '';
     position: absolute;
     bottom: -4px;
     left: 0;
     width: 100%;
     height: 2px;
-    background: #D2FF00;
+    background: #004B91;
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
-  .neon-underline:hover::after {
+  .primary-underline:hover::after {
     transform: scaleX(1);
   }
 
@@ -77,7 +84,7 @@
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: #D2FF00;
+    background: #004B91;
     transform: scaleY(0);
     transform-origin: top;
     pointer-events: none;

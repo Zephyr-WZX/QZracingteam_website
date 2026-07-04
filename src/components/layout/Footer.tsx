@@ -3,14 +3,13 @@ import { Link } from 'react-router-dom'
 const footerLinks = {
   导航: [
     { label: '首页', path: '/' },
-    { label: '关于我们', path: '/about' },
-    { label: '赛车', path: '/car' },
-    { label: '队员', path: '/team' },
+    { label: '赛车', path: '/#cars' },
+    { label: '成就', path: '/#feats' },
+    { label: '队员', path: '/#team' },
   ],
   更多: [
-    { label: '赞助商', path: '/sponsors' },
-    { label: '图库', path: '/gallery' },
-    { label: '联系我们', path: '/contact' },
+    { label: '合作伙伴', path: '/#partners' },
+    { label: '联系我们', path: '/#contact' },
   ],
   关注我们: [
     { label: '微博', path: '#' },
@@ -28,7 +27,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link to="/" className="text-2xl font-black tracking-tighter">
-              <span className="neon-text">QZ</span>
+              <span className="primary-text">QZ</span>
               <span className="text-white/80 font-medium ml-1">RACING</span>
             </Link>
             <p className="mt-4 text-sm text-white/40 leading-relaxed">
@@ -48,7 +47,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       to={link.path}
-                      className="text-sm text-white/50 hover:text-neon transition-colors duration-300"
+                      className="text-sm text-white/50 hover:text-primary-light transition-colors duration-300"
                     >
                       {link.label}
                     </Link>
@@ -65,7 +64,7 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} QZ Racing Team. All rights reserved.
           </p>
           <p className="text-xs text-white/20">
-            Designed with <span className="text-neon/50">▲</span> Speed & Passion
+            Designed with <span className="text-primary-light/50">▲</span> Speed & Passion
           </p>
         </div>
       </div>

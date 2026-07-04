@@ -9,9 +9,10 @@ export default {
           DEFAULT: '#0A0A0A',
           deep: '#050505',
         },
-        neon: {
-          DEFAULT: '#D2FF00',
-          dim: '#A8CC00',
+        primary: {
+          DEFAULT: '#004B91',
+          light: '#0066CC',
+          dim: '#003366',
         },
       },
       fontFamily: {
@@ -19,10 +20,10 @@ export default {
         display: ['Inter', 'DM Sans', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        'display-xl': ['12rem', { lineHeight: '0.9', letterSpacing: '-0.04em' }],
-        'display-lg': ['8rem', { lineHeight: '0.9', letterSpacing: '-0.03em' }],
-        'display-md': ['5rem', { lineHeight: '1', letterSpacing: '-0.02em' }],
-        'display-sm': ['3rem', { lineHeight: '1.1', letterSpacing: '-0.01em' }],
+        'display-xl': ['10rem', { lineHeight: '0.9', letterSpacing: '-0.04em' }],
+        'display-lg': ['7rem', { lineHeight: '0.9', letterSpacing: '-0.03em' }],
+        'display-md': ['4.5rem', { lineHeight: '1', letterSpacing: '-0.02em' }],
+        'display-sm': ['2.5rem', { lineHeight: '1.1', letterSpacing: '-0.01em' }],
       },
       animation: {
         'fade-in': 'fadeIn 0.8s ease-out forwards',

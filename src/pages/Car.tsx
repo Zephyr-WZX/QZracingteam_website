@@ -6,7 +6,7 @@ export default function Car() {
       <div className="section-container">
         <FadeUp>
           <h1 className="text-display-md font-black tracking-tighter">
-            我们的<span className="neon-text">赛车</span>
+            我们的<span className="primary-text">赛车</span>
           </h1>
         </FadeUp>
         <FadeUp delay={0.2}>

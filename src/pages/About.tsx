@@ -6,7 +6,7 @@ export default function About() {
       <div className="section-container">
         <FadeUp>
           <h1 className="text-display-md font-black tracking-tighter">
-            关于<span className="neon-text">我们</span>
+            关于<span className="primary-text">我们</span>
           </h1>
         </FadeUp>
         <FadeUp delay={0.2}>
