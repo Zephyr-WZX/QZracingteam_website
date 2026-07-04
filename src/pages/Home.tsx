@@ -1,8 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { FadeUp, CurtainReveal } from '@/components/animation'
-import GridScan from '@/components/GridScan'
+
+gsap.registerPlugin(ScrollTrigger)
 
 /* ================================================================
    首页 — 单页面滚动式布局
@@ -27,67 +29,144 @@ export default function Home() {
     }
   }, [location.hash])
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.hero-title',
-        { opacity: 0, y: 120 },
-        { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out', delay: 1 },
-      )
-      gsap.fromTo(
-        '.hero-sub',
-        { opacity: 0, y: 40 },
-        { opacity: 0.6, y: 0, duration: 0.8, ease: 'power3.out', delay: 1.4 },
-      )
-      gsap.fromTo(
-        '.hero-cta',
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 1.7 },
-      )
-      gsap.to('.scroll-indicator', {
-        y: 10,
-        opacity: 0.3,
-        duration: 1.5,
-        repeat: -1,
-        yoyo: true,
-        ease: 'power1.inOut',
-      })
-    }, heroRef)
+  // Hero: 滚动揭示动画（暗→亮 + 镜头拉近）
+  useLayoutEffect(() => {
+    const section = heroRef.current
+    if (!section) return
 
-    return () => ctx.revert()
+    // 先用 rAF 让浏览器完成 layout，再初始化 ScrollTrigger
+    let ctx: gsap.Context | null = null
+
+    const raf = requestAnimationFrame(() => {
+      ctx = gsap.context(() => {
+        // 文字入场（不受 scroll 影响）
+        gsap.fromTo(
+          '.hero-title',
+          { opacity: 0, y: 120 },
+          { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out', delay: 0.6 },
+        )
+        gsap.fromTo(
+          '.hero-sub',
+          { opacity: 0, y: 40 },
+          { opacity: 0.6, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.9 },
+        )
+        gsap.fromTo(
+          '.hero-cta',
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 1.1 },
+        )
+
+        // === 核心：pin + scrub ===
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: 'top top',
+            end: '+=300%',
+            pin: true,
+            pinSpacing: true,
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        })
+
+        // 黑色遮罩：0.9 → 0.02（主变亮层）
+        tl.fromTo(
+          '.hero-veil',
+          { opacity: 0.9 },
+          { opacity: 0.02, ease: 'power2.inOut', duration: 1 },
+          0,
+        )
+
+        // 图片缩放：1.05 → 1.18
+        tl.fromTo(
+          '.hero-image img',
+          { scale: 1.05 },
+          { scale: 1.18, ease: 'power3.inOut', duration: 1 },
+          0,
+        )
+
+        // 图片滤镜：blur 6px + 低饱和 → 清晰 + 高饱和
+        tl.fromTo(
+          '.hero-image img',
+          { filter: 'blur(6px) saturate(0.1)' },
+          { filter: 'blur(0px) saturate(1.1)', ease: 'power2.inOut', duration: 1 },
+          0,
+        )
+
+        // 暖色光晕：渐显 → 微收
+        tl.fromTo('.hero-glow', { opacity: 0 }, { opacity: 0.65, ease: 'power2.in', duration: 0.55 }, 0.08)
+        tl.to('.hero-glow', { opacity: 0.3, ease: 'power3.out', duration: 0.45 }, 0.5)
+
+        // 暗角
+        tl.fromTo('.hero-vignette', { opacity: 0.75 }, { opacity: 0.18, ease: 'power2.in', duration: 1 }, 0)
+
+        // 文字渐隐
+        tl.to('.hero-content', { opacity: 0, y: -60, ease: 'power2.in', duration: 0.5 }, 0.15)
+
+        // 滚动指示器
+        tl.to('.scroll-indicator', { opacity: 0, duration: 0.25 }, 0.03)
+      }, section)
+
+      // 再等一帧让 pin-spacer 生效后刷新
+      requestAnimationFrame(() => ScrollTrigger.refresh())
+    })
+
+    return () => {
+      cancelAnimationFrame(raf)
+      ctx?.revert()
+    }
   }, [])
 
   return (
     <>
       {/* ================================================================
-           Hero — 首页交互效果
+           Hero — 赛车图片滚动揭示
+           初始: 极暗 + 正常缩放
+           滚动: 逐渐变亮 + 镜头拉近
            ================================================================ */}
       <section
         ref={heroRef}
         id="hero"
-        className="relative h-screen flex items-center justify-center overflow-hidden bg-black"
+        className="relative h-screen flex items-center justify-center bg-black"
       >
-        {/* GridScan 3D 网格背景 */}
-        <GridScan
-          sensitivity={0.45}
-          lineThickness={1.2}
-          linesColor="#3A6AAA"
-          gridScale={0.1}
-          scanColor="#5599DD"
-          scanOpacity={0.55}
-          scanDirection="pingpong"
-          scanGlow={0.5}
-          scanSoftness={1.5}
-          scanDuration={2.5}
-          scanDelay={3.0}
-          enablePost={false}
-          bloomIntensity={0}
-          chromaticAberration={0}
-          noiseIntensity={0.005}
-        />
-        <div className="absolute inset-0 z-[2] bg-gradient-to-b from-black/30 via-transparent to-black pointer-events-none" />
+        {/* 赛车背景图 — overflow-hidden 裁剪缩放溢出 */}
+        <div className="hero-image absolute inset-0 z-0 overflow-hidden">
+          <img
+            src="/images/hero-bg.png"
+            alt="QZ Racing 赛车"
+            className="w-full h-full object-cover"
+            style={{ scale: '1.05', filter: 'blur(6px) saturate(0.1)' }}
+          />
+        </div>
 
-        <div className="relative z-10 text-center section-container">
+        {/* 暗色遮罩 — 从 0.9 → 0.02，核心"变亮"层 */}
+        <div className="hero-veil absolute inset-0 z-[1] bg-black" style={{ opacity: 0.9 }} />
+
+        {/* 暖色中心光晕 — 模拟车头光源 */}
+        <div
+          className="hero-glow absolute inset-0 z-[2] pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(ellipse 70% 50% at 50% 55%, rgba(255,160,40,0.45) 0%, rgba(255,80,20,0.08) 40%, transparent 70%)',
+            opacity: 0,
+          }}
+        />
+
+        {/* 暗角 — 边缘氛围 */}
+        <div
+          className="hero-vignette absolute inset-0 z-[3] pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 85%, rgba(0,0,0,0.85) 100%)',
+            opacity: 0.75,
+          }}
+        />
+
+        {/* 底部渐变过渡 */}
+        <div className="absolute inset-x-0 bottom-0 z-[5] h-1/3 bg-gradient-to-t from-black to-transparent pointer-events-none" />
+
+        {/* 文字内容 — 图片亮起后渐隐上移 */}
+        <div className="hero-content relative z-10 text-center section-container">
           <p className="hero-sub text-sm md:text-base tracking-[0.3em] text-white/60 mb-6">
             QZ Racing Team &middot; Formula Student
           </p>
@@ -113,7 +192,8 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 scroll-indicator">
+        {/* 底部滚动提示 */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 scroll-indicator">
           <span className="text-[10px] tracking-[0.3em] text-white/30">滚动探索</span>
           <div className="w-[1px] h-8 bg-gradient-to-b from-white/40 to-transparent" />
         </div>
