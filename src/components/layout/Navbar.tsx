@@ -4,6 +4,7 @@ import gsap from 'gsap'
 
 const MENU_ITEMS = [
   { label: '赛车', anchor: 'cars' },
+  { label: '赛程', anchor: 'races' },
   { label: '成就', anchor: 'feats' },
   { label: '队员', anchor: 'team' },
   { label: '合作伙伴', anchor: 'partners' },

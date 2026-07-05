@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { FadeUp, CurtainReveal } from '@/components/animation'
 import NextRace from '@/components/NextRace'
+import RaceSchedule from '@/components/RaceSchedule'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -135,7 +136,7 @@ export default function Home() {
       <section
         ref={heroRef}
         id="hero"
-        className="relative h-screen flex flex-col lg:flex-row lg:items-center justify-center lg:justify-between bg-black"
+        className="relative h-screen flex items-center justify-between bg-black"
       >
         {/* 赛车背景图 — overflow-hidden 裁剪缩放溢出 */}
         <div className="hero-image absolute inset-0 z-0 overflow-hidden">
@@ -174,13 +175,13 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 z-[5] h-1/3 bg-gradient-to-t from-black to-transparent pointer-events-none" />
 
         {/* 文字内容 — 中英混合，不对称排版 */}
-        <div className="hero-content relative z-10 pl-5 sm:pl-8 md:pl-20 lg:pl-28 pt-20 lg:pt-0">
+        <div className="hero-content relative z-10 pl-8 sm:pl-16 md:pl-32 lg:pl-40">
           {/* 顶部标签行 */}
-          <div className="mb-4 sm:mb-8 md:mb-12">
-            <p className="hero-sub text-[10px] md:text-xs tracking-[0.35em] text-white/40">
+          <div className="mb-5 sm:mb-8 md:mb-12">
+            <p className="hero-sub text-xs sm:text-sm tracking-[0.35em] text-white/40">
               ZHEJIANG UNIVERSITY
             </p>
-            <p className="hero-sub text-[10px] md:text-xs tracking-[0.25em] text-white/25 mt-1">
+            <p className="hero-sub text-xs sm:text-sm tracking-[0.25em] text-white/25 mt-1.5">
               FORMULA STUDENT TEAM
             </p>
           </div>
@@ -188,16 +189,16 @@ export default function Home() {
           {/* 主标题 — 两行不对称 */}
           <h1 className="hero-title font-black text-white leading-none">
             <div className="flex flex-wrap items-baseline gap-x-4 md:gap-x-8">
-              <span className="text-[3.2rem] sm:text-[5rem] md:text-display-xl lg:text-[12rem] tracking-tight">
+              <span className="text-[5rem] sm:text-[6rem] md:text-display-xl lg:text-[12rem] tracking-tight">
                 启真
               </span>
-              <span className="text-[1.4rem] sm:text-[2rem] md:text-[3.5rem] lg:text-[4.5rem] text-white/20 font-light tracking-[0.15em] italic"
+              <span className="text-[2rem] sm:text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] text-white/20 font-light tracking-[0.15em] italic"
                 style={{ fontFamily: 'Georgia, serif' }}>
                 ×
               </span>
             </div>
             <div className="relative inline-flex items-baseline -mt-2 md:-mt-4">
-              <span className="relative z-10 text-[3.2rem] sm:text-[5rem] md:text-display-xl lg:text-[12rem] primary-text tracking-tight">
+              <span className="relative z-10 text-[5rem] sm:text-[6rem] md:text-display-xl lg:text-[12rem] primary-text tracking-tight">
                 车队
               </span>
               <span
@@ -209,25 +210,25 @@ export default function Home() {
             </div>
           </h1>
 
-          {/* 标语 — 中英双行右对齐 */}
-          <div className="mt-6 sm:mt-10 md:mt-14 flex flex-col items-start">
-            <p className="hero-sub text-sm md:text-xl text-white/50 font-light tracking-[0.15em] leading-relaxed">
+          {/* 标语 — 中英双行左对齐 */}
+          <div className="mt-8 sm:mt-10 md:mt-14 flex flex-col items-start">
+            <p className="hero-sub text-lg sm:text-xl md:text-2xl text-white/50 font-light tracking-[0.15em] leading-relaxed">
               做难而正确的事情
             </p>
-            <p className="hero-sub text-[10px] md:text-sm text-white/20 tracking-[0.3em] mt-2">
+            <p className="hero-sub text-xs sm:text-sm text-white/20 tracking-[0.3em] mt-2">
               DO THE HARD THING RIGHT
             </p>
           </div>
-          <div className="hero-cta mt-8 md:mt-12 flex items-center gap-3 md:gap-6">
+          <div className="hero-cta mt-10 sm:mt-10 md:mt-12 flex items-center gap-3 md:gap-6">
             <a
               href="#cars"
-              className="btn-glass px-5 py-2.5 md:px-8 md:py-3 text-white/85 font-semibold text-xs md:text-sm tracking-wider rounded-full"
+              className="btn-glass px-6 py-3 md:px-8 md:py-3 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full"
             >
               探索赛车
             </a>
             <a
               href="#contact"
-              className="btn-glass px-5 py-2.5 md:px-8 md:py-3 text-white/85 font-semibold text-xs md:text-sm tracking-wider rounded-full"
+              className="btn-glass px-6 py-3 md:px-8 md:py-3 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full"
             >
               联系我们
             </a>
@@ -235,7 +236,7 @@ export default function Home() {
         </div>
 
         {/* 右侧 — NEXT RACE 倒计时 */}
-        <div className="hero-race relative z-10 px-5 sm:px-8 md:pr-20 lg:pr-28 mt-8 lg:mt-0 flex justify-center lg:block">
+        <div className="hero-race relative z-10 pr-8 sm:pr-16 md:pr-32 lg:pr-40">
           <NextRace />
         </div>
 
@@ -291,13 +292,34 @@ export default function Home() {
       </section>
 
       {/* ================================================================
-           成就 / 技术亮点
+           赛程
            ================================================================ */}
-      <section id="feats" className="py-20 sm:py-32 md:py-48 bg-black-deep">
+      <section id="races" className="py-20 sm:py-32 md:py-48 bg-black-deep">
         <div className="section-container">
           <FadeUp className="mb-20">
             <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
-              02 — 成就
+              02 — 赛程
+            </p>
+            <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
+              赛事<span className="primary-text">日程</span>
+            </h2>
+            <p className="mt-4 sm:mt-6 text-white/40 text-sm sm:text-base leading-relaxed max-w-md">
+              花海公路赛、耐力挑战赛、年度总决赛——整装待发，驰骋每一站。
+            </p>
+          </FadeUp>
+
+          <RaceSchedule />
+        </div>
+      </section>
+
+      {/* ================================================================
+           成就 / 技术亮点
+           ================================================================ */}
+      <section id="feats" className="py-20 sm:py-32 md:py-48 bg-black">
+        <div className="section-container">
+          <FadeUp className="mb-20">
+            <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
+              03 — 成就
             </p>
             <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
               赛道<span className="primary-text">成就</span>
@@ -358,11 +380,11 @@ export default function Home() {
       {/* ================================================================
            队员
            ================================================================ */}
-      <section id="team" className="py-20 sm:py-32 md:py-48 bg-black">
+      <section id="team" className="py-20 sm:py-32 md:py-48 bg-black-deep">
         <div className="section-container">
           <FadeUp className="mb-20">
             <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
-              03 — 队员
+              04 — 队员
             </p>
             <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
               我们的<span className="primary-text">队员</span>
@@ -404,11 +426,11 @@ export default function Home() {
       {/* ================================================================
            合作伙伴
            ================================================================ */}
-      <section id="partners" className="py-20 sm:py-32 md:py-48 bg-black-deep">
+      <section id="partners" className="py-20 sm:py-32 md:py-48 bg-black">
         <div className="section-container">
           <FadeUp className="mb-20">
             <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
-              04 — 合作伙伴
+              05 — 合作伙伴
             </p>
             <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
               合作<span className="primary-text">伙伴</span>
@@ -456,12 +478,12 @@ export default function Home() {
       {/* ================================================================
            联系我们
            ================================================================ */}
-      <section id="contact" className="py-20 sm:py-32 md:py-48 bg-black">
+      <section id="contact" className="py-20 sm:py-32 md:py-48 bg-black-deep">
         <div className="section-container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
             <FadeUp>
               <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
-                05 — 联系我们
+                06 — 联系我们
               </p>
               <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter leading-none">
                 联系<span className="primary-text">我们</span>

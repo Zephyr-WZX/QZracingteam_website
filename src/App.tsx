@@ -31,13 +31,13 @@ export default function App() {
           <img
             src="/icons/zju-qsy-outline.svg"
             alt="ZJU"
-            className="w-40 h-40 md:w-35 md:h-35"
+            className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48"
           />
-          <div className="w-0.5 px h-32 md:h-36 bg-white/40" />
+          <div className="w-px h-20 sm:h-28 md:h-36 bg-white/40" />
           <img
             src="/icons/teamlogo.svg"
             alt="QZ Racing Team"
-            className="w-40 h-40 md:w-48 md:h-48"
+            className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48"
             style={{ filter: 'brightness(0) invert(1)' }}
           />
         </div>
