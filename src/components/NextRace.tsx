@@ -29,10 +29,11 @@ function pad(n: number) {
 }
 
 /* ---- 赛道 SVG 图标（icons/huahai-track.svg 内联，fill 可配置） ---- */
-function TrackIcon({ className = '', fill }: { className?: string; fill: string }) {
+function TrackIcon({ className = '', fill, style }: { className?: string; fill: string; style?: React.CSSProperties }) {
   return (
     <svg
       className={className}
+      style={style}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1710 1278"
       fill="none"
@@ -56,17 +57,17 @@ export default function NextRace() {
   }, [])
 
   return (
-    <div className="flex flex-col items-end gap-5">
+    <div className="flex flex-col items-end gap-4 md:gap-5">
       {/* 赛道图标 */}
       <TrackIcon
-        className="w-64 h-64 md:w-80 md:h-80"
+        className="w-36 h-36 sm:w-48 sm:h-48 md:w-80 md:h-80"
         fill={nextRace.iconColor}
         style={{ opacity: nextRace.iconOpacity / 100 }}
       />
 
       {/* NEXT RACE 标签 */}
       <div className="text-right">
-        <p className="text-sm md:text-lg text-primary-light/60 mb-3 flex items-center gap-[0.45em] justify-end">
+        <p className="text-xs sm:text-sm md:text-lg text-white/60 mb-2 md:mb-3 flex items-center gap-[0.45em] justify-end">
           <span className="tracking-[0.15em]">NEXT</span>
           <span
             className="inline-block transition-opacity duration-75"
@@ -80,35 +81,35 @@ export default function NextRace() {
           </span>
           <span className="tracking-[0.15em]">RACE</span>
         </p>
-        <p className="text-lg md:text-2xl lg:text-3xl font-bold tracking-wider text-white/85">
+        <p className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold tracking-wider text-white/85">
           {nextRace.name}
         </p>
-        <p className="text-xs md:text-sm tracking-[0.2em] text-white/35 mt-1.5">
+        <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.2em] text-white/35 mt-1 md:mt-1.5">
           {nextRace.location}
         </p>
       </div>
 
       {/* 倒计时 */}
       {timeLeft ? (
-        <div className="flex gap-4 md:gap-5">
+        <div className="flex gap-2 sm:gap-4 md:gap-5">
           {([
             { value: timeLeft.days, label: '天' },
             { value: timeLeft.hours, label: '时' },
             { value: timeLeft.minutes, label: '分' },
             { value: timeLeft.seconds, label: '秒' },
           ] as const).map((unit) => (
-            <div key={unit.label} className="flex flex-col items-center min-w-[3.5rem] md:min-w-[4.5rem]">
-              <span className="text-3xl md:text-4xl lg:text-5xl font-black text-white tabular-nums tracking-tight">
+            <div key={unit.label} className="flex flex-col items-center min-w-[2.5rem] sm:min-w-[3.5rem] md:min-w-[4.5rem]">
+              <span className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tabular-nums tracking-tight">
                 {pad(unit.value)}
               </span>
-              <span className="text-xs md:text-sm tracking-[0.2em] text-white/30 mt-1.5">
+              <span className="text-[10px] sm:text-xs md:text-sm tracking-[0.2em] text-white/30 mt-1 md:mt-1.5">
                 {unit.label}
               </span>
             </div>
           ))}
         </div>
       ) : (
-        <p className="text-base tracking-wider text-primary-light/60">比赛进行中</p>
+        <p className="text-sm md:text-base tracking-wider text-primary-light/60">比赛进行中</p>
       )}
     </div>
   )

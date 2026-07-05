@@ -12,15 +12,11 @@ export default function App() {
   const curtainRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // 入场帷幕动画 — height 收缩 + 底部抛物线曲率从 0 变大
+    // 入场帷幕动画
     const tl = gsap.timeline()
-    tl.set(curtainRef.current, {
-      height: '100vh',
-      '--curve': 0,
-    })
+    tl.set(curtainRef.current, { height: '100vh' })
     tl.to(curtainRef.current, {
       height: '0vh',
-      '--curve': 1,
       duration: 0.8,
       ease: 'power3.inOut',
       delay: 0.3,

@@ -24,6 +24,6 @@ export const nextRace: RaceConfig = {
   location: '杭州·萧山',
   date: '2026-09-15T09:00:00+08:00',
   iconPath: 'icons/huahai-track.svg',
-  iconColor: '#ffffff53',
+  iconColor: '#ffffff',
   iconOpacity: 50,
 }

@@ -135,7 +135,7 @@ export default function Home() {
       <section
         ref={heroRef}
         id="hero"
-        className="relative h-screen flex items-center justify-between bg-black"
+        className="relative h-screen flex flex-col lg:flex-row lg:items-center justify-center lg:justify-between bg-black"
       >
         {/* 赛车背景图 — overflow-hidden 裁剪缩放溢出 */}
         <div className="hero-image absolute inset-0 z-0 overflow-hidden">
@@ -174,9 +174,9 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 z-[5] h-1/3 bg-gradient-to-t from-black to-transparent pointer-events-none" />
 
         {/* 文字内容 — 中英混合，不对称排版 */}
-        <div className="hero-content relative z-10 pl-12 md:pl-20 lg:pl-28">
+        <div className="hero-content relative z-10 pl-5 sm:pl-8 md:pl-20 lg:pl-28 pt-20 lg:pt-0">
           {/* 顶部标签行 */}
-          <div className="mb-8 md:mb-12">
+          <div className="mb-4 sm:mb-8 md:mb-12">
             <p className="hero-sub text-[10px] md:text-xs tracking-[0.35em] text-white/40">
               ZHEJIANG UNIVERSITY
             </p>
@@ -188,44 +188,46 @@ export default function Home() {
           {/* 主标题 — 两行不对称 */}
           <h1 className="hero-title font-black text-white leading-none">
             <div className="flex flex-wrap items-baseline gap-x-4 md:gap-x-8">
-              <span className="text-display-lg md:text-display-xl lg:text-[12rem] tracking-tight">
+              <span className="text-[3.2rem] sm:text-[5rem] md:text-display-xl lg:text-[12rem] tracking-tight">
                 启真
               </span>
-              <span className="text-[2rem] md:text-[3.5rem] lg:text-[4.5rem] text-white/20 font-light tracking-[0.15em] italic"
+              <span className="text-[1.4rem] sm:text-[2rem] md:text-[3.5rem] lg:text-[4.5rem] text-white/20 font-light tracking-[0.15em] italic"
                 style={{ fontFamily: 'Georgia, serif' }}>
                 ×
               </span>
-              <span className="hero-title text-lg md:text-2xl lg:text-3xl text-white/30 tracking-[0.2em] font-bold whitespace-nowrap self-end translate-y-1 -translate-x-1"
-                style={{ marginBottom: '0.15em' }}>
-                QZ RACING
-              </span>
             </div>
-            <div className="flex items-baseline gap-x-6 md:gap-x-10 -mt-2 md:-mt-4">
-              <span className="text-display-lg md:text-display-xl lg:text-[12rem] primary-text tracking-tight">
+            <div className="relative inline-flex items-baseline -mt-2 md:-mt-4">
+              <span className="relative z-10 text-[3.2rem] sm:text-[5rem] md:text-display-xl lg:text-[12rem] primary-text tracking-tight">
                 车队
+              </span>
+              <span
+                className="hero-title absolute right-0 text-sm sm:text-lg md:text-2xl lg:text-3xl text-white/30 tracking-[0.2em] font-bold whitespace-nowrap"
+                style={{ bottom: '-1.2em' }}
+              >
+                QZ RACING
               </span>
             </div>
           </h1>
 
           {/* 标语 — 中英双行右对齐 */}
-          <div className="mt-10 md:mt-14 flex flex-col items-start">
-            <p className="hero-sub text-base md:text-xl text-white/50 font-light tracking-[0.15em] leading-relaxed">
+          <div className="mt-6 sm:mt-10 md:mt-14 flex flex-col items-start">
+            <p className="hero-sub text-sm md:text-xl text-white/50 font-light tracking-[0.15em] leading-relaxed">
               做难而正确的事情
             </p>
-            <p className="hero-sub text-[11px] md:text-sm text-white/20 tracking-[0.3em] mt-2">
+            <p className="hero-sub text-[10px] md:text-sm text-white/20 tracking-[0.3em] mt-2">
               DO THE HARD THING RIGHT
             </p>
           </div>
-          <div className="hero-cta mt-12 flex items-center gap-6">
+          <div className="hero-cta mt-8 md:mt-12 flex items-center gap-3 md:gap-6">
             <a
               href="#cars"
-              className="btn-glass px-8 py-3 text-white/85 font-semibold text-sm tracking-wider rounded-full"
+              className="btn-glass px-5 py-2.5 md:px-8 md:py-3 text-white/85 font-semibold text-xs md:text-sm tracking-wider rounded-full"
             >
               探索赛车
             </a>
             <a
               href="#contact"
-              className="btn-glass px-8 py-3 text-white/85 font-semibold text-sm tracking-wider rounded-full"
+              className="btn-glass px-5 py-2.5 md:px-8 md:py-3 text-white/85 font-semibold text-xs md:text-sm tracking-wider rounded-full"
             >
               联系我们
             </a>
@@ -233,7 +235,7 @@ export default function Home() {
         </div>
 
         {/* 右侧 — NEXT RACE 倒计时 */}
-        <div className="hero-race relative z-10 pr-12 md:pr-20 lg:pr-28">
+        <div className="hero-race relative z-10 px-5 sm:px-8 md:pr-20 lg:pr-28 mt-8 lg:mt-0 flex justify-center lg:block">
           <NextRace />
         </div>
 
@@ -247,17 +249,17 @@ export default function Home() {
       {/* ================================================================
            赛车区域
            ================================================================ */}
-      <section id="cars" className="py-32 md:py-48 bg-black relative">
+      <section id="cars" className="py-20 sm:py-32 md:py-48 bg-black relative">
         <div className="section-container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-16 lg:gap-24 items-center">
             <FadeUp>
-              <p className="text-[11px] tracking-[0.3em] text-primary-light/60 mb-4">
+              <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
                 01 — 赛车
               </p>
-              <h2 className="text-display-sm md:text-display-md font-black tracking-tighter leading-none">
+              <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter leading-none">
                 我们的<span className="primary-text">赛车</span>
               </h2>
-              <p className="mt-6 text-white/40 text-base leading-relaxed max-w-md">
+              <p className="mt-4 sm:mt-6 text-white/40 text-sm sm:text-base leading-relaxed max-w-md">
                 从概念设计到赛道验证——每一台赛车都是工程智慧的结晶。
                 碳纤维车身、自研电控、空气动力学套件，只为极致的圈速。
               </p>
@@ -291,13 +293,13 @@ export default function Home() {
       {/* ================================================================
            成就 / 技术亮点
            ================================================================ */}
-      <section id="feats" className="py-32 md:py-48 bg-black-deep">
+      <section id="feats" className="py-20 sm:py-32 md:py-48 bg-black-deep">
         <div className="section-container">
           <FadeUp className="mb-20">
-            <p className="text-[11px] tracking-[0.3em] text-primary-light/60 mb-4">
+            <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
               02 — 成就
             </p>
-            <h2 className="text-display-sm md:text-display-md font-black tracking-tighter">
+            <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
               赛道<span className="primary-text">成就</span>
             </h2>
           </FadeUp>
@@ -311,8 +313,8 @@ export default function Home() {
                 { value: 'Top 10', label: '全国排名' },
                 { value: '3', label: '技术奖项' },
               ].map((stat) => (
-                <div key={stat.label} className="p-10 rounded-2xl bg-white/[0.02] border border-white/5">
-                  <p className="text-5xl md:text-6xl font-black primary-text tracking-tight">
+                <div key={stat.label} className="p-6 sm:p-8 md:p-10 rounded-2xl bg-white/[0.02] border border-white/5">
+                  <p className="text-3xl sm:text-5xl md:text-6xl font-black primary-text tracking-tight">
                     {stat.value}
                   </p>
                   <p className="mt-3 text-xs tracking-[0.2em] text-white/30">
@@ -342,9 +344,9 @@ export default function Home() {
               ].map((feat) => (
                 <div
                   key={feat.title}
-                  className="p-8 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/30 transition-all duration-500"
+                  className="p-5 sm:p-8 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/30 transition-all duration-500"
                 >
-                  <h3 className="text-xl font-bold tracking-tight">{feat.title}</h3>
+                  <h3 className="text-lg sm:text-xl font-bold tracking-tight">{feat.title}</h3>
                   <p className="mt-3 text-white/40 text-sm leading-relaxed">{feat.desc}</p>
                 </div>
               ))}
@@ -356,13 +358,13 @@ export default function Home() {
       {/* ================================================================
            队员
            ================================================================ */}
-      <section id="team" className="py-32 md:py-48 bg-black">
+      <section id="team" className="py-20 sm:py-32 md:py-48 bg-black">
         <div className="section-container">
           <FadeUp className="mb-20">
-            <p className="text-[11px] tracking-[0.3em] text-primary-light/60 mb-4">
+            <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
               03 — 队员
             </p>
-            <h2 className="text-display-sm md:text-display-md font-black tracking-tighter">
+            <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
               我们的<span className="primary-text">队员</span>
             </h2>
             <p className="mt-6 text-white/40 text-base max-w-md leading-relaxed">
@@ -383,7 +385,7 @@ export default function Home() {
               { name: '电控工程师', role: '线束 & PCB', dept: '技术部' },
             ].map((member, i) => (
               <FadeUp key={`${member.role}-${i}`} delay={i * 0.06}>
-                <div className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/30 transition-all duration-500">
+                <div className="group p-4 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/30 transition-all duration-500">
                   <div className="aspect-square rounded-xl bg-white/[0.03] flex items-center justify-center mb-5 overflow-hidden">
                     <span className="text-white/10 text-4xl group-hover:scale-110 transition-transform duration-500">
                       👤
@@ -402,13 +404,13 @@ export default function Home() {
       {/* ================================================================
            合作伙伴
            ================================================================ */}
-      <section id="partners" className="py-32 md:py-48 bg-black-deep">
+      <section id="partners" className="py-20 sm:py-32 md:py-48 bg-black-deep">
         <div className="section-container">
           <FadeUp className="mb-20">
-            <p className="text-[11px] tracking-[0.3em] text-primary-light/60 mb-4">
+            <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
               04 — 合作伙伴
             </p>
-            <h2 className="text-display-sm md:text-display-md font-black tracking-tighter">
+            <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
               合作<span className="primary-text">伙伴</span>
             </h2>
             <p className="mt-6 text-white/40 text-base max-w-md leading-relaxed">
@@ -435,8 +437,8 @@ export default function Home() {
           ))}
 
           <FadeUp delay={0.5}>
-            <div className="mt-20 text-center p-16 rounded-3xl bg-white/[0.02] border border-white/5">
-              <h3 className="text-2xl font-bold tracking-tight">想成为合作伙伴？</h3>
+            <div className="mt-20 text-center p-8 sm:p-12 md:p-16 rounded-3xl bg-white/[0.02] border border-white/5">
+              <h3 className="text-xl sm:text-2xl font-bold tracking-tight">想成为合作伙伴？</h3>
               <p className="mt-3 text-white/40 text-sm max-w-md mx-auto">
                 我们欢迎各类企业与机构以多种形式支持车队发展
               </p>
@@ -454,17 +456,17 @@ export default function Home() {
       {/* ================================================================
            联系我们
            ================================================================ */}
-      <section id="contact" className="py-32 md:py-48 bg-black">
+      <section id="contact" className="py-20 sm:py-32 md:py-48 bg-black">
         <div className="section-container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
             <FadeUp>
-              <p className="text-[11px] tracking-[0.3em] text-primary-light/60 mb-4">
+              <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
                 05 — 联系我们
               </p>
-              <h2 className="text-display-sm md:text-display-md font-black tracking-tighter leading-none">
+              <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter leading-none">
                 联系<span className="primary-text">我们</span>
               </h2>
-              <p className="mt-6 text-white/40 text-base leading-relaxed max-w-md">
+              <p className="mt-4 sm:mt-6 text-white/40 text-sm sm:text-base leading-relaxed max-w-md">
                 不论你是想了解车队详情、洽谈合作，还是有意加入我们——欢迎联系。
               </p>
               <div className="mt-12 space-y-8">
@@ -482,7 +484,7 @@ export default function Home() {
             </FadeUp>
 
             <FadeUp delay={0.3}>
-              <div className="p-10 rounded-2xl bg-white/[0.02] border border-white/5">
+              <div className="p-6 sm:p-8 md:p-10 rounded-2xl bg-white/[0.02] border border-white/5">
                 <h3 className="text-xl font-bold tracking-tight mb-8">发送消息</h3>
                 <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
                   {[
