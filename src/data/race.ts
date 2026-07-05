@@ -27,8 +27,8 @@ export interface Race {
   status: 'upcoming' | 'completed'
   /** 战绩（仅 completed 有效，支持多行） */
   result?: string[]
-  /** 国旗 emoji（如 '🇨🇳'） */
-  flag: string
+  /** 国旗 SVG 图标路径（如 'icons/flag-cn.svg'） */
+  flagIconPath: string
 }
 
 /* ───────── 模板（复制此对象新增赛事） ───────── */
@@ -41,7 +41,7 @@ export interface Race {
 //   iconOpacity: 50,
 //   desc: '',
 //   status: 'upcoming',
-//   flag: '🇨🇳',
+//   flagIconPath: 'icons/flag-cn.svg',
 // },
 
 /** 🛠️ 管理员在此维护全部赛事（按日期从近到远排列） */
@@ -55,7 +55,7 @@ export const ALL_RACES: Race[] = [
     iconOpacity: 50,
     desc: '高海拔弯道赛道，考验制动系统与车手极限操控。',
     status: 'upcoming',
-    flag: '🇨🇳',
+    flagIconPath: 'icons/flag-cn.svg',
   },
   {
     name: '青年工程师耐力赛',
@@ -66,7 +66,7 @@ export const ALL_RACES: Race[] = [
     iconOpacity: 50,
     desc: '8小时耐力挑战，对赛车可靠性与团队策略的双重考验。',
     status: 'upcoming',
-    flag: '🇨🇳',
+    flagIconPath: 'icons/flag-cn.svg',
   },
   {
     name: '全国大学生方程式',
@@ -77,7 +77,7 @@ export const ALL_RACES: Race[] = [
     iconOpacity: 50,
     desc: '年度最高规格赛事，全国高校车队同场竞技。',
     status: 'upcoming',
-    flag: '🇨🇳',
+    flagIconPath: 'icons/flag-cn.svg',
   },
   {
     name: '春季高校邀请赛',
@@ -89,7 +89,7 @@ export const ALL_RACES: Race[] = [
     desc: '赛季揭幕战，新赛车首次公开亮相。',
     status: 'completed',
     result: ['总成绩第 5 名', '耐久赛单项第 3', '最佳新秀奖'],
-    flag: '🇨🇳',
+    flagIconPath: 'icons/flag-cn.svg',
   },
 ]
 

@@ -45,8 +45,8 @@ export default function RaceSchedule() {
     if (!listRef.current) return
     gsap.fromTo(
       listRef.current,
-      { opacity: 0, y: animDir === 'down' ? 30 : -30 },
-      { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' },
+      { opacity: 0, y: animDir === 'down' ? 20 : -20 },
+      { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' },
     )
   }, [index])
 
@@ -58,9 +58,9 @@ export default function RaceSchedule() {
 
   return (
     <FadeUp>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-        {/* ===== 左侧：滚动日期列表 ===== */}
-        <div className="flex flex-col items-center justify-center border-r border-white/[0.06] pr-6 lg:pr-10">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-0 items-center">
+        {/* ===== 左侧：滚动日期列表（下移） ===== */}
+        <div className="flex flex-col items-center justify-center pt-12 sm:pt-16 pr-6 lg:pr-10">
           {/* 上按钮 */}
           <button
             onClick={prev}
@@ -84,21 +84,21 @@ export default function RaceSchedule() {
                     setAnimDir(i > index ? 'down' : 'up')
                     setIndex(i)
                   }}
-                  className={`group flex items-center gap-4 sm:gap-5 text-left transition-all duration-300 ${
+                  className={`group flex items-center gap-4 sm:gap-5 text-left ${
                     active ? 'opacity-100 scale-100' : 'opacity-20 hover:opacity-40 scale-90'
                   }`}
                 >
                   <span
-                    className={`text-[2.8rem] sm:text-[3.5rem] md:text-[4.2rem] font-black leading-none tabular-nums transition-colors duration-300 ${
+                    className={`text-[2.8rem] sm:text-[3.5rem] md:text-[4.2rem] font-black leading-none tabular-nums ${
                       active ? 'text-white' : 'text-white/30'
                     }`}
                   >
                     {fmtDay(r.date)}
                   </span>
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-base sm:text-lg leading-none">{r.flag}</span>
+                    <img src={`/${r.flagIconPath}`} alt="" className="w-5 h-4 sm:w-6 sm:h-5 object-contain" />
                     <span
-                      className={`text-[10px] sm:text-xs tracking-[0.12em] leading-none whitespace-nowrap transition-colors duration-300 ${
+                      className={`text-[10px] sm:text-xs tracking-[0.12em] leading-none whitespace-nowrap ${
                         active ? 'text-white/50' : 'text-white/15'
                       }`}
                     >
@@ -127,8 +127,13 @@ export default function RaceSchedule() {
           </span>
         </div>
 
+        {/* 中间：装饰横线 */}
+        <div className="hidden lg:flex flex-col items-center justify-center self-stretch pl-0 pr-8">
+          <div className="w-20 sm:w-28 h-0.5 bg-white/40" />
+        </div>
+
         {/* ===== 右侧：赛道图 + 赛事信息 ===== */}
-        <div ref={rightRef} className="flex flex-col items-center justify-center pl-6 lg:pl-10">
+        <div ref={rightRef} className="flex flex-col items-center justify-start -mt-8 lg:-mt-12 pl-6 lg:pl-10">
           {/* 赛道图标 */}
           <div className="relative flex items-center justify-center">
             <div
@@ -149,7 +154,7 @@ export default function RaceSchedule() {
 
           {/* 地点 + 介绍 */}
           <div className="mt-3 sm:mt-4 flex flex-col items-center gap-1.5">
-            <p className="text-xs sm:text-sm tracking-[0.2em] text-primary/70">{race.location}</p>
+            <p className="text-xl sm:text-3xl tracking-[0.15em] text-[#3388CC] font-medium">{race.location}</p>
             <p className="text-sm sm:text-base text-white/35 leading-relaxed max-w-md text-center">{race.desc}</p>
           </div>
 

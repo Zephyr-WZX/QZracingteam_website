@@ -294,9 +294,9 @@ export default function Home() {
       {/* ================================================================
            赛程
            ================================================================ */}
-      <section id="races" className="py-20 sm:py-32 md:py-48 bg-black-deep">
+      <section id="races" className="py-16 sm:py-20 md:py-24 bg-black-deep">
         <div className="section-container">
-          <FadeUp className="mb-20">
+          <FadeUp className="mb-10">
             <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
               02 — 赛程
             </p>
