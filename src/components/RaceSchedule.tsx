@@ -129,7 +129,7 @@ export default function RaceSchedule() {
 
         {/* 中间：装饰横线 */}
         <div className="hidden lg:flex flex-col items-center justify-center self-stretch pl-0 pr-8">
-          <div className="w-20 sm:w-28 h-0.5 bg-white/40" />
+          <div className="w-20 sm:w-28 h-1 bg-white/40 -translate-x-[150%] translate-y-2" />
         </div>
 
         {/* ===== 右侧：赛道图 + 赛事信息 ===== */}

@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { FadeUp, CurtainReveal } from '@/components/animation'
+import { FadeUp, CurtainReveal, FadeUpStagger } from '@/components/animation'
 import NextRace from '@/components/NextRace'
 import RaceSchedule from '@/components/RaceSchedule'
 import CarShowcase from '@/components/CarShowcase'
@@ -82,7 +82,7 @@ export default function Home() {
         // 黑色遮罩：0.9 → 0.02（主变亮层）
         tl.fromTo(
           '.hero-veil',
-          { opacity: 0.9 },
+          { opacity: 0.8 },
           { opacity: 0.02, ease: 'power2.inOut', duration: 1 },
           0,
         )
@@ -128,6 +128,85 @@ export default function Home() {
     }
   }, [])
 
+  /* ================================================================
+     全局入场动画 — 延迟 500ms 等 Hero pin-spacer 完成后统一注册
+     ================================================================ */
+  useEffect(() => {
+    let localCtx: gsap.Context | null = null
+
+    const timer = setTimeout(() => {
+      localCtx = gsap.context(() => {
+        // FadeUp
+        gsap.utils.toArray<HTMLElement>('[data-anim="fadeup"]').forEach((el) => {
+          const delay = parseFloat(el.dataset.delay || '0')
+          const y = parseFloat(el.dataset.y || '60')
+          const dur = parseFloat(el.dataset.duration || '0.8')
+          gsap.fromTo(
+            el,
+            { opacity: 0, y },
+            {
+              opacity: 1,
+              y: 0,
+              duration: dur,
+              delay,
+              ease: 'power3.out',
+              scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+            },
+          )
+        })
+
+        // CurtainReveal
+        gsap.utils.toArray<HTMLElement>('[data-anim="curtain"]').forEach((el) => {
+          gsap.fromTo(
+            el,
+            { clipPath: 'inset(0 0 100% 0)' },
+            {
+              clipPath: 'inset(0 0 0% 0)',
+              duration: 1.2,
+              ease: 'power4.inOut',
+              scrollTrigger: { trigger: el, start: 'top 80%', once: true },
+            },
+          )
+        })
+
+        // FadeUpStagger — 子元素交错
+        gsap.utils.toArray<HTMLElement>('[data-anim="stagger"]').forEach((el) => {
+          const stagger = parseFloat(el.dataset.stagger || '0.06')
+          const dur = parseFloat(el.dataset.duration || '0.6')
+          gsap.fromTo(
+            el.children,
+            { opacity: 0, y: 40 },
+            {
+              opacity: 1,
+              y: 0,
+              stagger,
+              duration: dur,
+              ease: 'power3.out',
+              scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+            },
+          )
+        })
+
+        // Parallax
+        gsap.utils.toArray<HTMLElement>('[data-anim="parallax"]').forEach((el) => {
+          const speed = parseFloat(el.dataset.speed || '0.3')
+          gsap.to(el, {
+            y: `${speed * 100}%`,
+            ease: 'none',
+            scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true },
+          })
+        })
+      })
+
+      ScrollTrigger.refresh()
+    }, 600)
+
+    return () => {
+      clearTimeout(timer)
+      localCtx?.revert()
+    }
+  }, [])
+
   return (
     <>
       {/* ================================================================
@@ -151,7 +230,7 @@ export default function Home() {
         </div>
 
         {/* 暗色遮罩 — 从 0.9 → 0.02，核心"变亮"层 */}
-        <div className="hero-veil absolute inset-0 z-[1] bg-black" style={{ opacity: 0.9 }} />
+        <div className="hero-veil absolute inset-0 z-[1] bg-black" style={{ opacity: 0.8 }} />
 
         {/* 暖色中心光晕 — 模拟车头光源 */}
         <div
@@ -397,7 +476,7 @@ export default function Home() {
             </p>
           </FadeUp>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <FadeUpStagger className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { name: '队长', role: '技术总监', dept: '管理部' },
               { name: '副队长', role: '底盘组长', dept: '技术部' },
@@ -407,21 +486,19 @@ export default function Home() {
               { name: '运营组长', role: '赞助 & 宣传', dept: '运营部' },
               { name: '悬架工程师', role: '动力学仿真', dept: '技术部' },
               { name: '电控工程师', role: '线束 & PCB', dept: '技术部' },
-            ].map((member, i) => (
-              <FadeUp key={`${member.role}-${i}`} delay={i * 0.06}>
-                <div className="group p-4 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/30 transition-all duration-500">
-                  <div className="aspect-square rounded-xl bg-white/[0.03] flex items-center justify-center mb-5 overflow-hidden">
-                    <span className="text-white/10 text-4xl group-hover:scale-110 transition-transform duration-500">
-                      👤
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-bold tracking-tight">{member.name}</h3>
-                  <p className="mt-1 text-sm text-primary-light/80">{member.role}</p>
-                  <p className="mt-1 text-xs text-white/20">{member.dept}</p>
+            ].map((member) => (
+              <div key={member.role} className="group p-4 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/30 transition-all duration-500">
+                <div className="aspect-square rounded-xl bg-white/[0.03] flex items-center justify-center mb-5 overflow-hidden">
+                  <span className="text-white/10 text-4xl group-hover:scale-110 transition-transform duration-500">
+                    👤
+                  </span>
                 </div>
-              </FadeUp>
+                <h3 className="text-lg font-bold tracking-tight">{member.name}</h3>
+                <p className="mt-1 text-sm text-primary-light/80">{member.role}</p>
+                <p className="mt-1 text-xs text-white/20">{member.dept}</p>
+              </div>
             ))}
-          </div>
+          </FadeUpStagger>
         </div>
       </section>
 
@@ -554,12 +631,14 @@ export default function Home() {
            页脚
            ================================================================ */}
       <footer className="py-16 sm:py-20 bg-black">
-        <div className="section-container flex flex-col items-center gap-6">
-          <img src="/icons/teamlogo.svg" alt="QZ Racing Team" className="w-16 h-16 sm:w-20 sm:h-20 brightness-0 invert opacity-50" />
-          <p className="text-[10px] sm:text-xs tracking-[0.2em] text-white/20">
-            &copy; {new Date().getFullYear()} QZ RACING TEAM. ALL RIGHTS RESERVED.
-          </p>
-        </div>
+        <FadeUp>
+          <div className="section-container flex flex-col items-center gap-6">
+            <img src="/icons/teamlogo.svg" alt="QZ Racing Team" className="w-16 h-16 sm:w-20 sm:h-20 brightness-0 invert opacity-50" />
+            <p className="text-[10px] sm:text-xs tracking-[0.2em] text-white/20">
+              &copy; {new Date().getFullYear()} QZ RACING TEAM. ALL RIGHTS RESERVED.
+            </p>
+          </div>
+        </FadeUp>
       </footer>
     </>
   )

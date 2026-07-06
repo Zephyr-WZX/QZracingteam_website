@@ -1,60 +1,44 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import gsap from 'gsap'
+import { useRef } from 'react'
 
-interface FadeUpProps {
-  children: React.ReactNode
-  className?: string
-  delay?: number
-  duration?: number
-  y?: number
-}
+/**
+ * 轻量动画标记组件 — 不创建自己的 ScrollTrigger。
+ * 仅渲染一个带 data-anim-* 属性的 div，由全局 ST batch 统一触发。
+ */
 
-/** 滚动触发淡入上移动画 */
+const defaultDelay = '0'
+const defaultY = '60'
+const defaultDur = '0.8'
+
 export function FadeUp({
   children,
   className = '',
   delay = 0,
   duration = 0.8,
   y = 60,
-}: FadeUpProps) {
+}: {
+  children: React.ReactNode
+  className?: string
+  delay?: number
+  duration?: number
+  y?: number
+}) {
   const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { opacity: 0, y },
-        {
-          opacity: 1,
-          y: 0,
-          duration,
-          delay,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-          },
-        },
-      )
-    })
-
-    return () => ctx.revert()
-  }, [delay, duration, y])
-
   return (
-    <div ref={ref} className={className}>
+    <div
+      ref={ref}
+      className={className}
+      data-anim="fadeup"
+      data-delay={delay ?? defaultDelay}
+      data-duration={duration ?? defaultDur}
+      data-y={y ?? defaultY}
+    >
       {children}
     </div>
   )
 }
 
-/** 入场帷幕组件（用于页面 section 切换） */
 export function CurtainReveal({
   children,
   className = '',
@@ -63,39 +47,38 @@ export function CurtainReveal({
   className?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { clipPath: 'inset(0 0 100% 0)' },
-        {
-          clipPath: 'inset(0 0 0% 0)',
-          duration: 1.2,
-          ease: 'power4.inOut',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 75%',
-            toggleActions: 'play none none none',
-          },
-        },
-      )
-    })
-
-    return () => ctx.revert()
-  }, [])
-
   return (
-    <div ref={ref} className={`overflow-hidden ${className}`}>
+    <div ref={ref} className={`overflow-hidden ${className}`} data-anim="curtain">
       {children}
     </div>
   )
 }
 
-/** 水平视差滚动容器 */
+export function FadeUpStagger({
+  children,
+  className = '',
+  stagger = 0.06,
+  duration = 0.6,
+}: {
+  children: React.ReactNode
+  className?: string
+  stagger?: number
+  duration?: number
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  return (
+    <div
+      ref={ref}
+      className={className}
+      data-anim="stagger"
+      data-stagger={stagger}
+      data-duration={duration}
+    >
+      {children}
+    </div>
+  )
+}
+
 export function ParallaxSection({
   children,
   speed = 0.3,
@@ -106,29 +89,8 @@ export function ParallaxSection({
   className?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
-    const ctx = gsap.context(() => {
-      gsap.to(el, {
-        y: `${speed * 100}%`,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: el.parentElement,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true,
-        },
-      })
-    })
-
-    return () => ctx.revert()
-  }, [speed])
-
   return (
-    <div ref={ref} className={className}>
+    <div ref={ref} className={className} data-anim="parallax" data-speed={speed}>
       {children}
     </div>
   )

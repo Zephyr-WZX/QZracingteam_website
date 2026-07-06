@@ -1,1 +1,1 @@
-export { FadeUp, CurtainReveal, ParallaxSection } from './ScrollReveal'
+export { FadeUp, FadeUpStagger, CurtainReveal, ParallaxSection } from './ScrollReveal'
