@@ -64,7 +64,7 @@ export default function RaceSchedule() {
           {/* 上按钮 */}
           <button
             onClick={prev}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/5 hover:bg-primary/40 border border-white/10 hover:border-primary/40 flex items-center justify-center text-white/35 hover:text-white transition-all duration-300 mb-4"
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/[0.06] backdrop-blur-md border-none flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.12] transition-all duration-300 mb-4"
             aria-label="上一场"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -113,7 +113,7 @@ export default function RaceSchedule() {
           {/* 下按钮 */}
           <button
             onClick={next}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/5 hover:bg-primary/40 border border-white/10 hover:border-primary/40 flex items-center justify-center text-white/35 hover:text-white transition-all duration-300 mt-4"
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/[0.06] backdrop-blur-md border-none flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.12] transition-all duration-300 mt-4"
             aria-label="下一场"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -159,11 +159,7 @@ export default function RaceSchedule() {
           </div>
 
           {/* 状态标签 */}
-          <span
-            className={`mt-4 inline-block text-[10px] tracking-[0.3em] rounded-full px-3 py-1 border ${
-              race.status === 'completed' ? 'text-primary/60 border-primary/30' : 'text-white/40 border-white/15'
-            }`}
-          >
+          <span className="mt-4 inline-block text-[10px] tracking-[0.3em] rounded-full px-3 py-1.5 bg-white/[0.06] backdrop-blur-md border-none text-white/60">
             {race.status === 'completed' ? 'COMPLETED' : 'UPCOMING'}
           </span>
 

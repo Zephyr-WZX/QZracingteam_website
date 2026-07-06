@@ -5,6 +5,7 @@ import gsap from 'gsap'
 const MENU_ITEMS = [
   { label: '赛车', anchor: 'cars' },
   { label: '赛程', anchor: 'races' },
+  { label: '照片', anchor: 'photos' },
   { label: '成就', anchor: 'feats' },
   { label: '队员', anchor: 'team' },
   { label: '合作伙伴', anchor: 'partners' },
@@ -146,11 +147,10 @@ export default function Navbar() {
           {!menuOpen && (
             <a
               href="/"
-              className="text-2xl font-black tracking-tighter select-none cursor-pointer"
+              className="flex items-center gap-3 text-2xl font-black tracking-tighter select-none cursor-pointer"
               onClick={handleLogoClick}
             >
-              <span className="primary-text">QZ</span>
-              <span className="text-white/80 font-medium ml-1">RACING</span>
+              <img src="/icons/teamlogo.svg" alt="QZ Racing" className="w-7 h-7 sm:w-8 sm:h-8 brightness-0 invert" />
             </a>
           )}
 

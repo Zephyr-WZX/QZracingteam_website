@@ -5,6 +5,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { FadeUp, CurtainReveal } from '@/components/animation'
 import NextRace from '@/components/NextRace'
 import RaceSchedule from '@/components/RaceSchedule'
+import CarShowcase from '@/components/CarShowcase'
+import PhotoWall from '@/components/PhotoWall'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -189,7 +191,8 @@ export default function Home() {
           {/* 主标题 — 两行不对称 */}
           <h1 className="hero-title font-black text-white leading-none">
             <div className="flex flex-wrap items-baseline gap-x-4 md:gap-x-8">
-              <span className="text-[5rem] sm:text-[6rem] md:text-display-xl lg:text-[12rem] tracking-tight">
+              <span className="text-[5rem] sm:text-[6rem] md:text-display-xl lg:text-[12rem] tracking-tight"
+                style={{ fontFamily: "'Noto Sans SC Black', sans-serif" }}>
                 启真
               </span>
               <span className="text-[2rem] sm:text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] text-white/20 font-light tracking-[0.15em] italic"
@@ -198,7 +201,8 @@ export default function Home() {
               </span>
             </div>
             <div className="relative inline-flex items-baseline -mt-2 md:-mt-4">
-              <span className="relative z-10 text-[5rem] sm:text-[6rem] md:text-display-xl lg:text-[12rem] primary-text tracking-tight">
+              <span className="relative z-10 text-[5rem] sm:text-[6rem] md:text-display-xl lg:text-[12rem] primary-text tracking-tight"
+                style={{ fontFamily: "'Noto Sans SC Black', sans-serif" }}>
                 车队
               </span>
               <span
@@ -248,46 +252,23 @@ export default function Home() {
       </section>
 
       {/* ================================================================
-           赛车区域
+           赛车
            ================================================================ */}
-      <section id="cars" className="py-20 sm:py-32 md:py-48 bg-black relative">
+      <section id="cars" className="py-20 sm:py-28 md:py-36 bg-black">
         <div className="section-container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-16 lg:gap-24 items-center">
-            <FadeUp>
-              <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
-                01 — 赛车
-              </p>
-              <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter leading-none">
-                我们的<span className="primary-text">赛车</span>
-              </h2>
-              <p className="mt-4 sm:mt-6 text-white/40 text-sm sm:text-base leading-relaxed max-w-md">
-                从概念设计到赛道验证——每一台赛车都是工程智慧的结晶。
-                碳纤维车身、自研电控、空气动力学套件，只为极致的圈速。
-              </p>
-              <div className="mt-8 flex gap-6">
-                <div className="text-center">
-                  <p className="text-3xl font-black primary-text">3.2<span className="text-sm">s</span></p>
-                  <p className="text-[10px] tracking-wider text-white/20 mt-1">0-100 km/h</p>
-                </div>
-                <div className="w-px bg-white/10" />
-                <div className="text-center">
-                  <p className="text-3xl font-black primary-text">220<span className="text-sm">kg</span></p>
-                  <p className="text-[10px] tracking-wider text-white/20 mt-1">车重</p>
-                </div>
-                <div className="w-px bg-white/10" />
-                <div className="text-center">
-                  <p className="text-3xl font-black primary-text">120<span className="text-sm">+</span></p>
-                  <p className="text-[10px] tracking-wider text-white/20 mt-1">极速 km/h</p>
-                </div>
-              </div>
-            </FadeUp>
+          <FadeUp className="mb-10">
+            <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
+              01 — 赛车
+            </p>
+            <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
+              我们的<span className="primary-text">赛车</span>
+            </h2>
+            <p className="mt-4 sm:mt-6 text-white/40 text-sm sm:text-base leading-relaxed max-w-md">
+              从概念设计到赛道验证——每一台赛车都是工程智慧的结晶。
+            </p>
+          </FadeUp>
 
-            <FadeUp delay={0.2}>
-              <div className="aspect-[4/3] rounded-3xl bg-white/[0.02] border border-white/5 flex items-center justify-center overflow-hidden">
-                <span className="text-white/10 text-7xl">🏎️</span>
-              </div>
-            </FadeUp>
-          </div>
+          <CarShowcase />
         </div>
       </section>
 
@@ -313,13 +294,34 @@ export default function Home() {
       </section>
 
       {/* ================================================================
+           照片墙
+           ================================================================ */}
+      <section id="photos" className="py-14 sm:py-16 md:py-20 bg-black">
+        <div className="section-container">
+          <FadeUp className="mb-8 md:mb-12">
+            <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
+              03 — 照片
+            </p>
+            <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
+              照片<span className="primary-text">墙</span>
+            </h2>
+            <p className="mt-4 text-white/40 text-sm sm:text-base leading-relaxed max-w-md">
+              每一个瞬间，都是速度与激情的见证。
+            </p>
+          </FadeUp>
+
+          <PhotoWall />
+        </div>
+      </section>
+
+      {/* ================================================================
            成就 / 技术亮点
            ================================================================ */}
-      <section id="feats" className="py-20 sm:py-32 md:py-48 bg-black">
+      <section id="feats" className="py-20 sm:py-32 md:py-48 bg-black-deep">
         <div className="section-container">
           <FadeUp className="mb-20">
             <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
-              03 — 成就
+              04 — 成就
             </p>
             <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
               赛道<span className="primary-text">成就</span>
@@ -384,7 +386,7 @@ export default function Home() {
         <div className="section-container">
           <FadeUp className="mb-20">
             <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
-              04 — 队员
+              05 — 队员
             </p>
             <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
               我们的<span className="primary-text">队员</span>
@@ -430,7 +432,7 @@ export default function Home() {
         <div className="section-container">
           <FadeUp className="mb-20">
             <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
-              05 — 合作伙伴
+              06 — 合作伙伴
             </p>
             <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
               合作<span className="primary-text">伙伴</span>
@@ -483,7 +485,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
             <FadeUp>
               <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
-                06 — 联系我们
+                07 — 联系我们
               </p>
               <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter leading-none">
                 联系<span className="primary-text">我们</span>
@@ -547,6 +549,18 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ================================================================
+           页脚
+           ================================================================ */}
+      <footer className="py-16 sm:py-20 bg-black">
+        <div className="section-container flex flex-col items-center gap-6">
+          <img src="/icons/teamlogo.svg" alt="QZ Racing Team" className="w-16 h-16 sm:w-20 sm:h-20 brightness-0 invert opacity-50" />
+          <p className="text-[10px] sm:text-xs tracking-[0.2em] text-white/20">
+            &copy; {new Date().getFullYear()} QZ RACING TEAM. ALL RIGHTS RESERVED.
+          </p>
+        </div>
+      </footer>
     </>
   )
 }
