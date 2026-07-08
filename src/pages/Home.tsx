@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -7,6 +7,9 @@ import NextRace from '@/components/NextRace'
 import RaceSchedule from '@/components/RaceSchedule'
 import CarShowcase from '@/components/CarShowcase'
 import PhotoWall from '@/components/PhotoWall'
+import LogoLoop from '@/components/LogoLoop'
+import { ALL_RACES } from '@/data/race'
+import { MAIN_SPONSORS, PARTNERS, SPECIAL_THANKS } from '@/data/sponsors'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -18,6 +21,9 @@ gsap.registerPlugin(ScrollTrigger)
 export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null)
   const location = useLocation()
+  const [raceIndex, setRaceIndex] = useState(0)
+  const [raceAnimDir, setRaceAnimDir] = useState<'up' | 'down'>('down')
+  const sponsorRef = useRef<HTMLDivElement>(null)
 
   // 处理从其他页面跳转过来的锚点定位
   useEffect(() => {
@@ -103,10 +109,6 @@ export default function Home() {
           0,
         )
 
-        // 暖色光晕：渐显 → 微收
-        tl.fromTo('.hero-glow', { opacity: 0 }, { opacity: 0.65, ease: 'power2.in', duration: 0.55 }, 0.08)
-        tl.to('.hero-glow', { opacity: 0.3, ease: 'power3.out', duration: 0.45 }, 0.5)
-
         // 暗角
         tl.fromTo('.hero-vignette', { opacity: 0.75 }, { opacity: 0.18, ease: 'power2.in', duration: 1 }, 0)
 
@@ -150,7 +152,7 @@ export default function Home() {
               duration: dur,
               delay,
               ease: 'power3.out',
-              scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+              scrollTrigger: { trigger: el, start: 'top 105%', once: true },
             },
           )
         })
@@ -182,7 +184,7 @@ export default function Home() {
               stagger,
               duration: dur,
               ease: 'power3.out',
-              scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+              scrollTrigger: { trigger: el, start: 'top 105%', once: true },
             },
           )
         })
@@ -204,6 +206,30 @@ export default function Home() {
     return () => {
       clearTimeout(timer)
       localCtx?.revert()
+    }
+  }, [])
+
+  // 主要赞助商标识逐个凸显动画
+  useEffect(() => {
+    const container = sponsorRef.current
+    if (!container) return
+    const items = container.querySelectorAll('.sponsor-item')
+    if (items.length === 0) return
+
+    let ctx: gsap.Context | null = null
+    const timer = setTimeout(() => {
+      ctx = gsap.context(() => {
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: 1 })
+        items.forEach((item) => {
+          tl.to(item, { scale: 1.05, duration: 0.6, ease: 'power2.out' }, '+=1')
+            .to(item, { scale: 1, duration: 0.5, ease: 'power2.in' })
+        })
+      }, container)
+    }, 1200)
+
+    return () => {
+      clearTimeout(timer)
+      ctx?.revert()
     }
   }, [])
 
@@ -232,15 +258,7 @@ export default function Home() {
         {/* 暗色遮罩 — 从 0.9 → 0.02，核心"变亮"层 */}
         <div className="hero-veil absolute inset-0 z-[1] bg-black" style={{ opacity: 0.8 }} />
 
-        {/* 暖色中心光晕 — 模拟车头光源 */}
-        <div
-          className="hero-glow absolute inset-0 z-[2] pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse 70% 50% at 50% 55%, rgba(255,160,40,0.45) 0%, rgba(255,80,20,0.08) 40%, transparent 70%)',
-            opacity: 0,
-          }}
-        />
+
 
         {/* 暗角 — 边缘氛围 */}
         <div
@@ -354,8 +372,35 @@ export default function Home() {
       {/* ================================================================
            赛程
            ================================================================ */}
-      <section id="races" className="py-16 sm:py-20 md:py-24 bg-black-deep">
-        <div className="section-container">
+      <section id="races" className="relative overflow-hidden py-16 sm:py-20 md:py-24 bg-black">
+        {/* 赛道照片背景 — 紧贴左边缘，从左到右渐变至透明 */}
+        {ALL_RACES[raceIndex]?.trackImage && (
+          <div
+            className="absolute inset-y-0 left-0 z-0 pointer-events-none translate-y-48 sm:translate-y-64"
+            style={{
+              width: '60%',
+              maskImage: 'linear-gradient(to right, black 25%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, black 25%, transparent 100%)',
+            }}
+          >
+            <img
+              src={`/${ALL_RACES[raceIndex].trackImage}`}
+              alt=""
+              className="w-full h-auto object-contain object-left"
+              style={{ scale: '1.2' }}
+            />
+          </div>
+        )}
+        {/* 上下渐变遮罩 — 让图片上下边缘融入背景 */}
+        <div
+          className="absolute left-0 right-0 top-0 z-[1] h-24 sm:h-32 pointer-events-none"
+          style={{ background: 'linear-gradient(to bottom, #060B14 0%, transparent 100%)' }}
+        />
+        <div
+          className="absolute left-0 right-0 bottom-0 z-[1] h-24 sm:h-32 pointer-events-none"
+          style={{ background: 'linear-gradient(to top, #060B14 0%, transparent 100%)' }}
+        />
+        <div className="section-container relative z-[2]">
           <FadeUp className="mb-10">
             <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
               02 — 赛程
@@ -364,11 +409,15 @@ export default function Home() {
               赛事<span className="primary-text">日程</span>
             </h2>
             <p className="mt-4 sm:mt-6 text-white/40 text-sm sm:text-base leading-relaxed max-w-md">
-              花海公路赛、耐力挑战赛、年度总决赛——整装待发，驰骋每一站。
+              整装待发，驰骋每一站。
             </p>
           </FadeUp>
 
-          <RaceSchedule />
+          <RaceSchedule
+            index={raceIndex}
+            animDir={raceAnimDir}
+            onChange={(i, dir) => { setRaceIndex(i); setRaceAnimDir(dir) }}
+          />
         </div>
       </section>
 
@@ -396,14 +445,14 @@ export default function Home() {
       {/* ================================================================
            成就 / 技术亮点
            ================================================================ */}
-      <section id="feats" className="py-20 sm:py-32 md:py-48 bg-black-deep">
+      <section id="feats" className="py-20 sm:py-32 md:py-48 bg-black">
         <div className="section-container">
           <FadeUp className="mb-20">
             <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
               04 — 成就
             </p>
             <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
-              赛道<span className="primary-text">成就</span>
+              团队<span className="primary-text">成就</span>
             </h2>
           </FadeUp>
 
@@ -461,7 +510,7 @@ export default function Home() {
       {/* ================================================================
            队员
            ================================================================ */}
-      <section id="team" className="py-20 sm:py-32 md:py-48 bg-black-deep">
+      <section id="team" className="py-20 sm:py-32 md:py-48 bg-black">
         <div className="section-container">
           <FadeUp className="mb-20">
             <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
@@ -504,60 +553,143 @@ export default function Home() {
 
       {/* ================================================================
            合作伙伴
+           三层过渡底色：主要赞助商 → 合作伙伴 → 特别鸣谢
            ================================================================ */}
-      <section id="partners" className="py-20 sm:py-32 md:py-48 bg-black">
-        <div className="section-container">
-          <FadeUp className="mb-20">
-            <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
-              06 — 合作伙伴
-            </p>
-            <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
-              合作<span className="primary-text">伙伴</span>
-            </h2>
-            <p className="mt-6 text-white/40 text-base max-w-md leading-relaxed">
-              感谢每一位赞助商的支持。正是你们的信任与投入，让工程梦想在赛道上驰骋。
-            </p>
-          </FadeUp>
-
-          {(['铂金合作伙伴', '黄金合作伙伴', '白银合作伙伴'] as const).map((tier, tierI) => (
-            <FadeUp key={tier} delay={tierI * 0.15}>
-              <div className={tierI > 0 ? 'mt-14' : ''}>
-                <h3 className="text-xs tracking-[0.3em] text-white/20 mb-6">{tier}</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {Array.from({ length: tierI === 0 ? 2 : tierI === 1 ? 3 : 4 }).map((_, j) => (
-                    <div
-                      key={j}
-                      className="aspect-[3/2] bg-white/[0.02] rounded-xl border border-white/5 flex items-center justify-center hover:border-primary/30 transition-all duration-500"
-                    >
-                      <span className="text-white/10 text-sm tracking-wider">赞助商</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </FadeUp>
-          ))}
-
-          <FadeUp delay={0.5}>
-            <div className="mt-20 text-center p-8 sm:p-12 md:p-16 rounded-3xl bg-white/[0.02] border border-white/5">
-              <h3 className="text-xl sm:text-2xl font-bold tracking-tight">想成为合作伙伴？</h3>
-              <p className="mt-3 text-white/40 text-sm max-w-md mx-auto">
-                我们欢迎各类企业与机构以多种形式支持车队发展
+      <section id="partners" className="bg-black">
+        {/* ───── 区块标题 ───── */}
+        <div className="pt-16 sm:pt-20 md:pt-28 pb-0 mb-8 sm:mb-14">
+          <div className="section-container">
+            <FadeUp>
+              <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
+                05 — 合作伙伴
               </p>
-              <a
-                href="#contact"
-                className="btn-glass mt-8 px-8 py-3 text-sm tracking-wider rounded-full"
-              >
-                联系我们
-              </a>
+              <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
+                合作<span className="primary-text">伙伴</span>
+              </h2>
+              <p className="mt-4 sm:mt-6 text-white/40 text-sm sm:text-base max-w-md leading-relaxed">
+                感谢每一位赞助商的支持。正是你们的信任与投入，让工程梦想在赛道上驰骋。
+              </p>
+            </FadeUp>
+          </div>
+        </div>
+
+        {/* ───── 主要赞助商 ───── */}
+        <div className="bg-[#151F2D] pt-10 sm:pt-14 pb-10 sm:pb-14">
+          <div className="section-container mb-8 sm:mb-12">
+            <FadeUp>
+              <h3 className="text-xs sm:text-sm tracking-[0.3em] text-white/25">主要赞助商</h3>
+            </FadeUp>
+          </div>
+          <FadeUp>
+            <div ref={sponsorRef} className="flex flex-wrap items-center justify-center gap-10 sm:gap-16 md:gap-24 px-4">
+              {MAIN_SPONSORS.map((s, i) => {
+                const img = (
+                  <img
+                    src={`/${s.logo}`}
+                    alt={s.name}
+                    className="h-14 sm:h-20 md:h-28 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-300"
+                  />
+                )
+                return s.url ? (
+                  <a key={s.name} href={s.url} target="_blank" rel="noreferrer noopener" title={s.name} className="sponsor-item">
+                    {img}
+                  </a>
+                ) : (
+                  <span key={s.name} className="sponsor-item">{img}</span>
+                )
+              })}
             </div>
           </FadeUp>
+        </div>
+
+        {/* ───── 合作伙伴  LogoLoop 滚动 ───── */}
+        <div className="bg-[#111A26] pt-12 sm:pt-20 pb-16 sm:pb-24 overflow-hidden">
+          <div className="section-container mb-8 sm:mb-12">
+            <FadeUp>
+              <h3 className="text-xs sm:text-sm tracking-[0.3em] text-white/25">合作伙伴</h3>
+            </FadeUp>
+          </div>
+          <FadeUp>
+            <LogoLoop
+              logos={PARTNERS.map((s) => ({
+                src: `/${s.logo}`,
+                alt: s.name,
+                ...(s.url ? { href: s.url } : {}),
+              }))}
+              speed={80}
+              direction="left"
+              logoHeight={52}
+              gap={64}
+              pauseOnHover
+              fadeOut
+              fadeOutColor="#111A26"
+              ariaLabel="合作伙伴"
+            />
+          </FadeUp>
+        </div>
+
+        {/* ───── 特别鸣谢 ───── */}
+        <div className="py-16 sm:py-24">
+          <div className="section-container">
+            <FadeUp>
+              <h3 className="text-xs sm:text-sm tracking-[0.3em] text-white/25 mb-8 sm:mb-12">特别鸣谢</h3>
+            </FadeUp>
+            {SPECIAL_THANKS.length > 0 ? (
+              <FadeUp>
+                <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
+                  {SPECIAL_THANKS.map((s) => {
+                    const img = (
+                      <img
+                        src={`/${s.logo}`}
+                        alt={s.name}
+                        className="h-10 sm:h-14 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+                      />
+                    )
+                    return s.url ? (
+                      <a key={s.name} href={s.url} target="_blank" rel="noreferrer noopener" title={s.name}>
+                        {img}
+                      </a>
+                    ) : (
+                      <span key={s.name}>{img}</span>
+                    )
+                  })}
+                </div>
+              </FadeUp>
+            ) : (
+              <FadeUp>
+                <p className="text-white/20 text-sm sm:text-base leading-relaxed max-w-md">
+                  感谢所有关心和支持浙江大学启真车队发展的个人与组织。
+                </p>
+              </FadeUp>
+            )}
+          </div>
+        </div>
+
+        {/* ───── CTA ───── */}
+        <div className="pb-20 sm:pb-28 md:pb-40">
+          <div className="section-container">
+            <FadeUp delay={0.3}>
+              <div className="text-center p-8 sm:p-12 md:p-16 rounded-3xl bg-white/[0.02] border border-white/5">
+                <h3 className="text-xl sm:text-2xl font-bold tracking-tight">想成为合作伙伴？</h3>
+                <p className="mt-3 text-white/40 text-sm max-w-md mx-auto">
+                  我们欢迎各类企业与机构以多种形式支持车队发展
+                </p>
+                <a
+                  href="#contact"
+                  className="btn-glass mt-8 px-8 py-3 text-sm tracking-wider rounded-full"
+                >
+                  联系我们
+                </a>
+              </div>
+            </FadeUp>
+          </div>
         </div>
       </section>
 
       {/* ================================================================
            联系我们
            ================================================================ */}
-      <section id="contact" className="py-20 sm:py-32 md:py-48 bg-black-deep">
+      <section id="contact" className="py-20 sm:py-32 md:py-48 bg-black">
         <div className="section-container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
             <FadeUp>

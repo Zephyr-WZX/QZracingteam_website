@@ -58,6 +58,7 @@ export default function NextRace() {
         className="w-36 h-36 sm:w-48 sm:h-48 md:w-80 md:h-80"
         fill={race.iconColor}
         style={{ opacity: race.iconOpacity / 100 }}
+        iconPath={race.iconPath}
       />
 
       {/* NEXT RACE 标签 */}

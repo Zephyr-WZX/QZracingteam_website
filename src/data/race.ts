@@ -29,6 +29,8 @@ export interface Race {
   result?: string[]
   /** 国旗 SVG 图标路径（如 'icons/flag-cn.svg'） */
   flagIconPath: string
+  /** 赛道照片路径（public/images/tracks/ 下），用于赛程板块背景 */
+  trackImage?: string
 }
 
 /* ───────── 模板（复制此对象新增赛事） ───────── */
@@ -53,20 +55,10 @@ export const ALL_RACES: Race[] = [
     iconPath: 'icons/huahai-track.svg',
     iconColor: '#ffffff',
     iconOpacity: 50,
-    desc: '高海拔弯道赛道，考验制动系统与车手极限操控。',
+    desc: '新车落地后首测，收集数据',
     status: 'upcoming',
     flagIconPath: 'icons/flag-cn.svg',
-  },
-  {
-    name: '青年工程师耐力赛',
-    location: '广东·肇庆',
-    date: '2026-10-22T09:00:00+08:00',
-    iconPath: 'icons/huahai-track.svg',
-    iconColor: '#ffffff',
-    iconOpacity: 50,
-    desc: '8小时耐力挑战，对赛车可靠性与团队策略的双重考验。',
-    status: 'upcoming',
-    flagIconPath: 'icons/flag-cn.svg',
+    trackImage: 'images/tracks/HKC.png',
   },
   {
     name: '全国大学生方程式',
@@ -80,16 +72,17 @@ export const ALL_RACES: Race[] = [
     flagIconPath: 'icons/flag-cn.svg',
   },
   {
-    name: '春季高校邀请赛',
+    name: '同济赛',
     location: '上海',
-    date: '2026-04-20T09:00:00+08:00',
-    iconPath: 'icons/huahai-track.svg',
+    date: '2026-03-20T09:00:00+08:00',
+    iconPath: 'icons/tongji-track.svg',
     iconColor: '#ffffff',
     iconOpacity: 50,
-    desc: '赛季揭幕战，新赛车首次公开亮相。',
+    desc: '油电同场竞技 究竟谁将称王',
     status: 'completed',
-    result: ['总成绩第 5 名', '耐久赛单项第 3', '最佳新秀奖'],
+    result: ['高速避障第 3 名', '直线加速第 3'],
     flagIconPath: 'icons/flag-cn.svg',
+    trackImage: 'images/tracks/tongji.jpg',
   },
 ]
 
