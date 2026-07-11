@@ -2,14 +2,16 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { FadeUp, CurtainReveal, FadeUpStagger } from '@/components/animation'
+import { FadeUp, FadeUpStagger } from '@/components/animation'
 import NextRace from '@/components/NextRace'
 import RaceSchedule from '@/components/RaceSchedule'
 import CarShowcase from '@/components/CarShowcase'
 import PhotoWall from '@/components/PhotoWall'
 import LogoLoop from '@/components/LogoLoop'
+import CircularGallery from '@/components/CircularGallery'
 import { ALL_RACES } from '@/data/race'
 import { MAIN_SPONSORS, PARTNERS, SPECIAL_THANKS } from '@/data/sponsors'
+import { AWARDS } from '@/data/awards'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -443,67 +445,33 @@ export default function Home() {
       </section>
 
       {/* ================================================================
-           成就 / 技术亮点
+           成就
            ================================================================ */}
-      <section id="feats" className="py-20 sm:py-32 md:py-48 bg-black">
+      <section id="feats" className="pt-6 sm:pt-12 md:pt-16 pb-20 sm:pb-32 md:pb-48 bg-black">
         <div className="section-container">
-          <FadeUp className="mb-20">
+          <FadeUp className="mb-2 sm:mb-4">
             <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
               04 — 成就
             </p>
             <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
               团队<span className="primary-text">成就</span>
             </h2>
+            <p className="mt-4 sm:mt-6 text-white/40 text-sm sm:text-base leading-relaxed max-w-md">
+              多年征战，累累硕果。每一张证书都记录着车队的拼搏与成长。
+            </p>
           </FadeUp>
+        </div>
 
-          {/* 数据大字报 */}
-          <CurtainReveal>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-              {[
-                { value: '8+', label: '年参赛历史' },
-                { value: '50+', label: '团队成员' },
-                { value: 'Top 10', label: '全国排名' },
-                { value: '3', label: '技术奖项' },
-              ].map((stat) => (
-                <div key={stat.label} className="p-6 sm:p-8 md:p-10 rounded-2xl bg-white/[0.02] border border-white/5">
-                  <p className="text-3xl sm:text-5xl md:text-6xl font-black primary-text tracking-tight">
-                    {stat.value}
-                  </p>
-                  <p className="mt-3 text-xs tracking-[0.2em] text-white/30">
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </CurtainReveal>
-
-          {/* 技术方格 */}
-          <FadeUp delay={0.3}>
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                {
-                  title: '空气动力学',
-                  desc: 'CFD 优化 + 风洞验证，全碳纤维空力套件，下压力媲美 F4 级别。',
-                },
-                {
-                  title: '电控系统',
-                  desc: '自研 ECU + 数据采集系统，实时遥测，毫秒级响应。',
-                },
-                {
-                  title: '底盘与悬架',
-                  desc: '钢管桁架车身，双叉臂推杆悬架，Öhlins 可调减震。',
-                },
-              ].map((feat) => (
-                <div
-                  key={feat.title}
-                  className="p-5 sm:p-8 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/30 transition-all duration-500"
-                >
-                  <h3 className="text-lg sm:text-xl font-bold tracking-tight">{feat.title}</h3>
-                  <p className="mt-3 text-white/40 text-sm leading-relaxed">{feat.desc}</p>
-                </div>
-              ))}
-            </div>
-          </FadeUp>
+        {/* CircularGallery — 全宽 WebGL 3D 展示 */}
+        <div className="mt-0 sm:mt-2 h-[420px] sm:h-[500px]" style={{ position: 'relative' }}>
+          <CircularGallery
+            items={AWARDS}
+            bend={2}
+            textColor="#ffffff"
+            borderRadius={0.1}
+            scrollEase={0.02}
+            font="bold 30px 'Noto Sans SC', sans-serif"
+          />
         </div>
       </section>
 
@@ -582,7 +550,7 @@ export default function Home() {
           </div>
           <FadeUp>
             <div ref={sponsorRef} className="flex flex-wrap items-center justify-center gap-10 sm:gap-16 md:gap-24 px-4">
-              {MAIN_SPONSORS.map((s, i) => {
+              {MAIN_SPONSORS.map((s) => {
                 const img = (
                   <img
                     src={`/${s.logo}`}
@@ -662,26 +630,6 @@ export default function Home() {
                 </p>
               </FadeUp>
             )}
-          </div>
-        </div>
-
-        {/* ───── CTA ───── */}
-        <div className="pb-20 sm:pb-28 md:pb-40">
-          <div className="section-container">
-            <FadeUp delay={0.3}>
-              <div className="text-center p-8 sm:p-12 md:p-16 rounded-3xl bg-white/[0.02] border border-white/5">
-                <h3 className="text-xl sm:text-2xl font-bold tracking-tight">想成为合作伙伴？</h3>
-                <p className="mt-3 text-white/40 text-sm max-w-md mx-auto">
-                  我们欢迎各类企业与机构以多种形式支持车队发展
-                </p>
-                <a
-                  href="#contact"
-                  className="btn-glass mt-8 px-8 py-3 text-sm tracking-wider rounded-full"
-                >
-                  联系我们
-                </a>
-              </div>
-            </FadeUp>
           </div>
         </div>
       </section>
