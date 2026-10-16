@@ -7,8 +7,14 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const API = 'https://open.feishu.cn/open-apis/'
 const MAX_IMAGE_BYTES = 25 * 1024 * 1024
 const CONFIG_KEYS = ['FEISHU_APP_ID', 'FEISHU_APP_SECRET', 'FEISHU_BASE_TOKEN', 'FEISHU_PHOTOS_TABLE_ID', 'FEISHU_MEMBERS_TABLE_ID']
-const PHOTO_FIELDS = { 名称: 1, 照片: 17, 排序: 2, 是否展示: 7 }
-const MEMBER_FIELDS = { 姓名: 1, 组别标识: 1, 组别名称: 1, 组别排序: 2, 是否组长: 7, 职务: 1, 头像: 17, 简介: 1, 个人链接: 15, 排序: 2, 是否展示: 7 }
+const PHOTO_FIELDS = { 名称: 1, 照片: 17, 是否展示: 7 }
+const MEMBER_FIELDS = { 姓名: 1, 组别标识: [1, 3, 4], 职务: [1, 3], 是否展示: 7 }
+const PHOTO_OPTIONAL_FIELDS = { 排序: 2, 说明: 1, 布局高度: 2 }
+const MEMBER_OPTIONAL_FIELDS = { 组别名称: 1, 组别排序: 2, 是否组长: 7, 排序: 2, 头像: 17, 简介: 1, 个人链接: 15 }
+const GROUPS = {
+  指导老师: 'advisors', 管理层: 'management', 底盘组: 'chassis', 电气组: 'electrical',
+  空套组: 'aero', 单体壳组: 'monocoque', 运营组: 'operations', 无人组: 'autonomous', 赛车手: 'drivers',
+}
 
 const wait = (ms) => new Promise((done) => setTimeout(done, ms))
 const hash = (value) => createHash('sha256').update(value).digest('hex').slice(0, 24)
@@ -123,10 +129,13 @@ export function imageExtension(bytes) {
   throw new Error('附件不是支持的图片格式，请使用 JPG、PNG、WebP 或 GIF。')
 }
 
-export function validateFields(fields, required) {
+export function validateFields(fields, required, optional = {}) {
   const map = new Map(fields.map((field) => [field.field_name, field]))
   for (const [name, type] of Object.entries(required)) {
-    if (map.get(name)?.type !== type) throw new Error(`字段“${name}”缺失或类型错误，请按配置说明设置字段类型。`)
+    if (!(Array.isArray(type) ? type : [type]).includes(map.get(name)?.type)) throw new Error(`字段“${name}”缺失或类型错误，请按配置说明设置字段类型。`)
+  }
+  for (const [name, type] of Object.entries(optional)) {
+    if (map.has(name) && map.get(name).type !== type) throw new Error(`可选字段“${name}”类型错误，请按配置说明设置字段类型。`)
   }
   return map
 }
@@ -185,7 +194,35 @@ function publishedRows(records) {
     if (!record.fields || typeof record.record_id !== 'string' || seen.has(record.record_id)) throw new Error('飞书记录格式异常或出现重复记录。')
     seen.add(record.record_id)
     return checkbox(record.fields['是否展示'], '是否展示')
-  }).sort((a, b) => number(a.fields['排序'], '排序') - number(b.fields['排序'], '排序') || a.record_id.localeCompare(b.record_id))
+  }).sort((a, b) => number(a.fields['排序'], '排序') - number(b.fields['排序'], '排序'))
+}
+
+function memberGroups(fields, memberFields, role) {
+  if (role === '指导老师') return [{ key: 'advisors', title: '指导老师', order: 0 }]
+  const field = memberFields.get('组别标识')
+  let selections
+  if (field.type === 4) {
+    selections = fields['组别标识'] ?? []
+    if (!Array.isArray(selections) || selections.some((value) => typeof value !== 'string')) throw new Error('组别标识必须是有效的多选值。')
+  } else selections = [text(fields['组别标识'], '组别标识', true)]
+  if (!selections.length) throw new Error('展示的成员至少选择一个组别；指导老师可仅设置职务。')
+  const options = field.property?.options?.map((option) => option.name) ?? []
+  return [...new Set(selections)].map((selection) => {
+    const name = selection.trim()
+    if (!name) throw new Error('组别选项不能为空。')
+    const legacyTitle = text(fields['组别名称'], '组别名称')
+    let key, title
+    if (legacyTitle) {
+      if (!/^[a-z][a-z0-9_-]{0,39}$/.test(name)) throw new Error('旧格式的组别标识须为小写英文。')
+      key = name
+      title = legacyTitle
+    } else {
+      key = GROUPS[name] ?? (/^[a-z][a-z0-9_-]{0,39}$/.test(name) ? name : `group-${hash(name)}`)
+      title = name
+    }
+    const index = options.indexOf(selection)
+    return { key, title, order: number(fields['组别排序'], '组别排序', index < 0 ? 100 : index + 1) }
+  })
 }
 
 export async function buildContent({ photoRecords, memberRecords, photoFields, memberFields, saveImage, now = new Date() }) {
@@ -203,29 +240,34 @@ export async function buildContent({ photoRecords, memberRecords, photoFields, m
   }
   for (const row of publishedRows(memberRecords)) {
     const f = row.fields
-    const key = text(f['组别标识'], '组别标识', true)
-    if (!/^[a-z][a-z0-9_-]{0,39}$/.test(key)) throw new Error('组别标识须为小写英文字母开头，限英文、数字、下划线和连字符。')
-    const title = text(f['组别名称'], '组别名称', true)
-    const order = number(f['组别排序'], '组别排序')
-    let group = groups.get(key)
-    if (!group) {
-      group = { key, title, order, members: [] }
-      groups.set(key, group)
-    }
-    if (group.title !== title || group.order !== order) throw new Error('同一组别的名称和组别排序必须一致。')
+    const role = text(f['职务'], '职务')
     const member = {
       name: text(f['姓名'], '姓名', true),
-      role: text(f['职务'], '职务'),
+      role,
       desc: text(f['简介'], '简介'),
       link: link(f['个人链接']),
     }
     const file = attachment(f['头像'], false)
     if (file) member.avatar = await saveImage('members', memberFields.get('头像').field_id, row.record_id, file)
-    if (checkbox(f['是否组长'], '是否组长')) {
-      if (key === 'advisors') throw new Error('指导老师组不设置组长。')
-      if (group.leader) throw new Error('每组只能设置一名组长。')
-      group.leader = member
-    } else group.members.push(member)
+    const definitions = memberGroups(f, memberFields, role)
+    if (role === '组长' && !memberFields.has('是否组长') && definitions.length !== 1) throw new Error('职务为组长的成员只能选择一个组别；其他职务可以多选。')
+    for (const definition of definitions) {
+      const { key, title, order } = definition
+      let group = groups.get(key)
+      if (!group) {
+        group = { key, title, order, members: [] }
+        groups.set(key, group)
+      }
+      if (group.title !== title || group.order !== order) throw new Error('同一组别的名称和组别排序必须一致。')
+      const leader = memberFields.has('是否组长')
+        ? checkbox(f['是否组长'], '是否组长')
+        : role === '组长' || (role === '队长' && key === 'management')
+      if (leader) {
+        if (key === 'advisors') throw new Error('指导老师组不设置组长。')
+        if (group.leader) throw new Error('每组只能设置一名组长；请检查组长成员选择的组别。')
+        group.leader = member
+      } else group.members.push(member)
+    }
   }
   const teamGroups = [...groups.values()].sort((a, b) => a.order - b.order || a.key.localeCompare(b.key)).map(({ order, ...group }) => group)
   return { version: 1, syncedAt: now.toISOString(), photos, groups: teamGroups }
@@ -237,8 +279,8 @@ export async function syncFeishu({ root = ROOT, config = readConfig(), client = 
   const photoTable = config.FEISHU_PHOTOS_TABLE_ID
   const memberTable = config.FEISHU_MEMBERS_TABLE_ID
   // Finish every API call and validation in staging before replacing live build inputs.
-  const photoFields = validateFields(await client.list(base, photoTable, 'fields'), PHOTO_FIELDS)
-  const memberFields = validateFields(await client.list(base, memberTable, 'fields'), MEMBER_FIELDS)
+  const photoFields = validateFields(await client.list(base, photoTable, 'fields'), PHOTO_FIELDS, PHOTO_OPTIONAL_FIELDS)
+  const memberFields = validateFields(await client.list(base, memberTable, 'fields'), MEMBER_FIELDS, MEMBER_OPTIONAL_FIELDS)
   const photoRecords = await client.list(base, photoTable, 'records')
   const memberRecords = await client.list(base, memberTable, 'records')
   const parent = join(root, 'public', 'content')

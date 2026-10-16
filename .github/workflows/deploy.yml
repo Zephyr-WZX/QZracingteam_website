@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      validate_only:
+        description: '仅验证飞书同步和构建，不发布网站'
+        type: boolean
+        default: false
   schedule:
     - cron: '17 * * * *'
 
@@ -32,7 +37,7 @@ jobs:
       - run: npm ci
       - run: npm run test:feishu
       - name: Sync published Feishu content
-        if: vars.FEISHU_SYNC_ENABLED == 'true'
+        if: vars.FEISHU_SYNC_ENABLED == 'true' || inputs.validate_only == true
         env:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
@@ -42,9 +47,12 @@ jobs:
         run: npm run sync:feishu
       - run: npm run build
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+        if: inputs.validate_only != true
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        if: inputs.validate_only != true
         with:
           path: dist
       - name: Deploy
+        if: inputs.validate_only != true
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5

@@ -76,6 +76,53 @@ test('configuration errors name missing keys without revealing credentials', () 
   assert.throws(() => readConfig({ FEISHU_APP_SECRET: 'sensitive-value' }), (error) => /FEISHU_APP_ID/.test(error.message) && !error.message.includes('sensitive-value'))
 })
 
+const simplifiedMemberFields = new Map([
+  ['姓名', { type: 1 }],
+  ['组别标识', { type: 4, property: { options: [{ name: '管理层' }, { name: '底盘组' }, { name: '无人组' }] } }],
+  ['职务', { type: 3 }],
+  ['头像', { type: 17, field_id: 'avatar' }],
+  ['是否展示', { type: 7 }],
+])
+
+test('current simplified tables accept multi-select groups and optional removed columns', () => {
+  const current = [...simplifiedMemberFields].map(([field_name, value]) => ({ field_name, ...value }))
+  assert.doesNotThrow(() => validateFields(current, { 姓名: 1, 组别标识: [1, 3, 4], 职务: [1, 3], 是否展示: 7 }, { 排序: 2, 组别名称: 1 }))
+  assert.throws(() => validateFields([...current, { field_name: '排序', type: 1 }], {}, { 排序: 2 }), /可选字段/)
+})
+
+test('one member appears in multiple selected groups; advisor and captain use existing layouts', async () => {
+  let downloads = 0
+  const content = await buildContent(options({
+    memberFields: simplifiedMemberFields,
+    memberRecords: [
+      row('captain', { 姓名: '队长', 职务: '队长', 组别标识: ['底盘组', '管理层'], 头像: [{ file_token: 'avatar' }], 是否展示: true }),
+      row('advisor', { 姓名: '指导老师', 职务: '指导老师', 是否展示: true }),
+      row('leader', { 姓名: '底盘组长', 职务: '组长', 组别标识: ['底盘组'], 是否展示: true }),
+      row('member', { 姓名: '跨组成员', 组别标识: ['无人组', '底盘组'], 是否展示: true }),
+    ],
+    saveImage: async () => { downloads++; return 'content/feishu/images/avatar.png' },
+  }))
+  assert.deepEqual(content.groups.map((g) => g.key), ['advisors', 'management', 'chassis', 'autonomous'])
+  assert.equal(content.groups[0].members[0].name, '指导老师')
+  assert.equal(content.groups[1].leader.name, '队长')
+  assert.equal(content.groups[2].leader.name, '底盘组长')
+  assert.deepEqual(content.groups[2].members.map((m) => m.name), ['队长', '跨组成员'])
+  assert.equal(content.groups[3].members[0].name, '跨组成员')
+  assert.equal(downloads, 1)
+})
+
+test('group leaders must select exactly one group; ordinary members require a group', async () => {
+  for (const f of [
+    { 职务: '组长', 组别标识: ['底盘组', '无人组'] },
+    { 职务: '', 组别标识: [] },
+  ]) await assert.rejects(buildContent(options({ memberFields: simplifiedMemberFields, memberRecords: [row('a', { 姓名: '测试', 是否展示: true, ...f })] })))
+})
+
+test('without a sort column, API record order is preserved instead of sorting by record ID', async () => {
+  const content = await buildContent(options({ photoRecords: [photo('z', { 名称: '先返回' }), photo('a', { 名称: '后返回' })] }))
+  assert.deepEqual(content.photos.map((p) => p.caption), ['先返回', '后返回'])
+})
+
 test('API client paginates and supplies application auth; rejects business errors without leaking responses', async () => {
   const requests = []
   const responses = [
