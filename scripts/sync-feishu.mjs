@@ -155,6 +155,8 @@ function text(value, label, required = false) {
 
 function number(value, label, fallback = 0) {
   if (value == null || value === '') return fallback
+  // Bitable can serialize Number fields as numeric strings.
+  if (typeof value === 'string' && /^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i.test(value.trim())) value = Number(value.trim())
   if (typeof value !== 'number' || !Number.isFinite(value)) throw new Error(`字段“${label}”必须是数字。`)
   return value
 }

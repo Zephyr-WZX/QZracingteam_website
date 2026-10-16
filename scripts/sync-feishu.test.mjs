@@ -123,6 +123,14 @@ test('without a sort column, API record order is preserved instead of sorting by
   assert.deepEqual(content.photos.map((p) => p.caption), ['先返回', '后返回'])
 })
 
+test('Feishu Number fields serialized as strings are parsed without accepting invalid values', async () => {
+  const content = await buildContent(options({ photoRecords: [photo('a', { 布局高度: '600.0', 排序: '2' })] }))
+  assert.equal(content.photos[0].height, 600)
+  for (const value of ['400px', 'NaN', 'Infinity', false]) {
+    await assert.rejects(buildContent(options({ photoRecords: [photo('a', { 布局高度: value })] })), /必须是数字/)
+  }
+})
+
 test('API client paginates and supplies application auth; rejects business errors without leaking responses', async () => {
   const requests = []
   const responses = [
