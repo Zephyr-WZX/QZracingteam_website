@@ -70,6 +70,7 @@ export default function PhotoWall() {
 
   return (
     <div className="relative">
+      {!photoItems.length && <p className="text-sm text-white/40">暂无照片</p>}
       {/* 照片网格 */}
       <div className="relative w-full" style={{ height: gridHeight }}>
         <Masonry

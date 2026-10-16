@@ -11,6 +11,7 @@ export interface MasonryItem {
   img: string;
   url: string;
   height: number;
+  caption?: string;
 }
 
 interface MasonryProps {
@@ -290,6 +291,7 @@ const Masonry: React.FC<MasonryProps> = ({
           key={item.id}
           data-key={item.id}
           className="item-wrapper"
+          title={item.caption}
           onClick={() => window.open(item.url, '_blank', 'noopener')}
           onMouseEnter={e => handleMouseEnter(e, item)}
           onMouseLeave={e => handleMouseLeave(e, item)}

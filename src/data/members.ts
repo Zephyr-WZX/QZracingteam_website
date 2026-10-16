@@ -1,3 +1,5 @@
+import { feishuContent } from './feishu'
+
 /* ================================================================
    队员配置 — 管理员面板数据源
 
@@ -39,7 +41,7 @@ export interface TeamGroup {
 const PH = 'images/members/头哥.jpg'
 
 /** 🛠️ 管理员在此维护全部队员（数组顺序 = 页面行顺序） */
-export const TEAM_GROUPS: TeamGroup[] = [
+const LOCAL_TEAM_GROUPS: TeamGroup[] = [
   {
     key: 'advisors',
     title: '指导老师',
@@ -129,3 +131,5 @@ export const TEAM_GROUPS: TeamGroup[] = [
     ],
   },
 ]
+
+export const TEAM_GROUPS: TeamGroup[] = feishuContent?.groups ?? LOCAL_TEAM_GROUPS

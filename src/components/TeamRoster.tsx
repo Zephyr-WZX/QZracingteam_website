@@ -232,6 +232,8 @@ export default function TeamRoster() {
   const mobile = useIsMobile()
   const group = TEAM_GROUPS[active]
 
+  if (!group) return <p className="text-sm text-white/40">暂无成员信息</p>
+
   return (
     <div>
       {/* 组索引 — 选中标签毛玻璃胶囊 */}

@@ -1,4 +1,7 @@
-// 自动扫描 public/images/photowall/ 中所有图片——无需手动更新文件名
+import { feishuContent } from './feishu';
+import { assetPath } from '@/utils';
+
+// 未配置飞书时，自动扫描本地照片。
 const BASE = `${import.meta.env.BASE_URL}images/photowall`;
 
 const imageModules = import.meta.glob<{ default: string }>(
@@ -17,9 +20,14 @@ const getHeight = (i: number) => {
   return 240 + ((i * 173 + 59) % 5) * 40;
 };
 
-export const photoItems = photoFiles.map((file, i) => ({
+const localPhotos = photoFiles.map((file, i) => ({
   id: String(i + 1),
   img: `${BASE}/${file}`,
   url: `${BASE}/${file}`,
   height: getHeight(i),
+  caption: '',
 }));
+
+export const photoItems = feishuContent
+  ? feishuContent.photos.map((photo) => ({ ...photo, img: assetPath(photo.img), url: assetPath(photo.url) }))
+  : localPhotos;

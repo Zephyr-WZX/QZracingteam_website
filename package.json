@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync:feishu": "node scripts/sync-feishu.mjs",
+    "test:feishu": "node --test scripts/sync-feishu.test.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.117.3",
