@@ -5,9 +5,11 @@ import { readFile } from 'node:fs/promises'
 try {
   const config = readConfig()
   const client = new FeishuClient()
+  console.log('检查应用凭证')
   await client.authenticate(config)
   const schema = []
   for (const [label, table] of [['照片墙', config.FEISHU_PHOTOS_TABLE_ID], ['成员信息', config.FEISHU_MEMBERS_TABLE_ID]]) {
+    console.log(`读取${label}字段结构`)
     const fields = await client.list(config.FEISHU_BASE_TOKEN, table, 'fields')
     schema.push({
       table: label,

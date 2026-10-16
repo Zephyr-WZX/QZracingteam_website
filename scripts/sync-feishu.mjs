@@ -46,8 +46,9 @@ export class FeishuClient {
         continue
       }
       if (!response.ok) {
-        await response.body?.cancel()
-        throw new Error(`飞书请求失败（HTTP ${response.status}）；请检查应用权限和表格授权。`)
+        const failure = await response.json().catch(() => null)
+        const code = typeof failure?.code === 'number' ? `，code ${failure.code}` : ''
+        throw new Error(`飞书请求失败（HTTP ${response.status}${code}）；请检查应用凭证、权限和表格授权。`)
       }
       return response
     }
