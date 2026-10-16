@@ -27,6 +27,7 @@
   html {
     scroll-behavior: auto;
     background-color: #060B14;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -135,6 +136,20 @@
   .image-reveal.visible {
     clip-path: inset(0 0 0 0);
   }
+}
+
+/* ===== 队员卡片入场动画 ===== */
+@keyframes slideRightPop {
+  0%   { opacity: 0; transform: translateX(90px) scale(0.8); }
+  60%  { opacity: 1; transform: translateX(-8px) scale(1.02); }
+  80%  { transform: translateX(3px) scale(0.99); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+.anim-slide-right {
+  --anim-delay: 0s;
+  opacity: 0;
+  animation: slideRightPop 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  animation-delay: var(--anim-delay);
 }
 
 /* ===== GSAP 初始状态 ===== */

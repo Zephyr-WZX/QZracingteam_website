@@ -2,13 +2,14 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { FadeUp, FadeUpStagger } from '@/components/animation'
+import { FadeUp } from '@/components/animation'
 import NextRace from '@/components/NextRace'
 import RaceSchedule from '@/components/RaceSchedule'
 import CarShowcase from '@/components/CarShowcase'
 import PhotoWall from '@/components/PhotoWall'
 import LogoLoop from '@/components/LogoLoop'
 import CircularGallery from '@/components/CircularGallery'
+import TeamRoster from '@/components/TeamRoster'
 import { ALL_RACES } from '@/data/race'
 import { MAIN_SPONSORS, PARTNERS, SPECIAL_THANKS } from '@/data/sponsors'
 import { AWARDS } from '@/data/awards'
@@ -245,7 +246,7 @@ export default function Home() {
       <section
         ref={heroRef}
         id="hero"
-        className="relative h-screen flex items-center justify-between bg-black"
+        className="relative h-screen flex items-center justify-between bg-black overflow-hidden"
       >
         {/* 赛车背景图 — overflow-hidden 裁剪缩放溢出 */}
         <div className="hero-image absolute inset-0 z-0 overflow-hidden">
@@ -276,70 +277,74 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 z-[5] h-1/3 bg-gradient-to-t from-black to-transparent pointer-events-none" />
 
         {/* 文字内容 — 中英混合，不对称排版 */}
-        <div className="hero-content relative z-10 pl-8 sm:pl-16 md:pl-32 lg:pl-40">
-          {/* 顶部标签行 */}
-          <div className="mb-5 sm:mb-8 md:mb-12">
-            <p className="hero-sub text-xs sm:text-sm tracking-[0.35em] text-white/40">
-              ZHEJIANG UNIVERSITY
-            </p>
-            <p className="hero-sub text-xs sm:text-sm tracking-[0.25em] text-white/25 mt-1.5">
-              FORMULA STUDENT TEAM
-            </p>
-          </div>
-
-          {/* 主标题 — 两行不对称 */}
-          <h1 className="hero-title font-black text-white leading-none">
-            <div className="flex flex-wrap items-baseline gap-x-4 md:gap-x-8">
-              <span className="text-[5rem] sm:text-[6rem] md:text-display-xl lg:text-[12rem] tracking-tight"
-                style={{ fontFamily: "'Noto Sans SC Black', sans-serif" }}>
-                启真
-              </span>
-              <span className="text-[2rem] sm:text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] text-white/20 font-light tracking-[0.15em] italic"
-                style={{ fontFamily: 'Georgia, serif' }}>
-                ×
-              </span>
+        <div className="hero-content relative z-10 pl-8 sm:pl-16 md:pl-32 lg:pl-40 min-w-0">
+          {/* 顶部标签行 + 标题 + 标语 — 移动端整体上移 */}
+          <div className="-mt-44 sm:mt-0">
+            <div className="mb-5 sm:mb-8 md:mb-12">
+              <p className="hero-sub text-xs sm:text-sm tracking-[0.35em] text-white/40">
+                ZHEJIANG UNIVERSITY
+              </p>
+              <p className="hero-sub text-xs sm:text-sm tracking-[0.25em] text-white/25 mt-1.5">
+                FORMULA STUDENT TEAM
+              </p>
             </div>
-            <div className="relative inline-flex items-baseline -mt-2 md:-mt-4">
-              <span className="relative z-10 text-[5rem] sm:text-[6rem] md:text-display-xl lg:text-[12rem] primary-text tracking-tight"
-                style={{ fontFamily: "'Noto Sans SC Black', sans-serif" }}>
-                车队
-              </span>
-              <span
-                className="hero-title absolute right-0 text-sm sm:text-lg md:text-2xl lg:text-3xl text-white/30 tracking-[0.2em] font-bold whitespace-nowrap"
-                style={{ bottom: '-1.2em' }}
+
+            {/* 主标题 — 两行不对称 */}
+            <h1 className="hero-title font-black text-white leading-none">
+              <div className="flex flex-wrap items-baseline gap-x-4 md:gap-x-8">
+                <span className="text-[5rem] sm:text-[6rem] md:text-display-xl lg:text-[12rem] tracking-tight"
+                  style={{ fontFamily: "'Noto Sans SC Black', sans-serif" }}>
+                  启真
+                </span>
+                <span className="text-[2rem] sm:text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] text-white/20 font-light tracking-[0.15em] italic"
+                  style={{ fontFamily: 'Georgia, serif' }}>
+                  ×
+                </span>
+              </div>
+              <div className="relative inline-flex items-baseline -mt-2 md:-mt-4">
+                <span className="relative z-10 text-[5rem] sm:text-[6rem] md:text-display-xl lg:text-[12rem] primary-text tracking-tight"
+                  style={{ fontFamily: "'Noto Sans SC Black', sans-serif" }}>
+                  车队
+                </span>
+                <span
+                  className="hero-title absolute right-0 text-sm sm:text-lg md:text-2xl lg:text-3xl text-white/30 tracking-[0.2em] font-bold whitespace-nowrap"
+                  style={{ bottom: '-1.2em' }}
+                >
+                  QZ RACING
+                </span>
+              </div>
+            </h1>
+
+            {/* 标语 — 中英双行左对齐 */}
+            <div className="mt-8 sm:mt-10 md:mt-14 flex flex-col items-start">
+              <p className="hero-sub text-lg sm:text-xl md:text-2xl text-white/50 font-light tracking-[0.15em] leading-relaxed">
+                做难而正确的事情
+              </p>
+              <p className="hero-sub text-xs sm:text-sm text-white/20 tracking-[0.3em] mt-2">
+                DO THE HARD THING RIGHT
+              </p>
+            </div>
+
+            {/* 按钮 */}
+            <div className="hero-cta mt-16 sm:mt-10 md:mt-12 flex items-center gap-3 md:gap-6">
+              <a
+                href="#cars"
+                className="btn-glass px-6 py-3 md:px-8 md:py-3 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full"
               >
-                QZ RACING
-              </span>
+                探索赛车
+              </a>
+              <a
+                href="#contact"
+                className="btn-glass px-6 py-3 md:px-8 md:py-3 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full"
+              >
+                联系我们
+              </a>
             </div>
-          </h1>
-
-          {/* 标语 — 中英双行左对齐 */}
-          <div className="mt-8 sm:mt-10 md:mt-14 flex flex-col items-start">
-            <p className="hero-sub text-lg sm:text-xl md:text-2xl text-white/50 font-light tracking-[0.15em] leading-relaxed">
-              做难而正确的事情
-            </p>
-            <p className="hero-sub text-xs sm:text-sm text-white/20 tracking-[0.3em] mt-2">
-              DO THE HARD THING RIGHT
-            </p>
-          </div>
-          <div className="hero-cta mt-10 sm:mt-10 md:mt-12 flex items-center gap-3 md:gap-6">
-            <a
-              href="#cars"
-              className="btn-glass px-6 py-3 md:px-8 md:py-3 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full"
-            >
-              探索赛车
-            </a>
-            <a
-              href="#contact"
-              className="btn-glass px-6 py-3 md:px-8 md:py-3 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full"
-            >
-              联系我们
-            </a>
           </div>
         </div>
 
         {/* 右侧 — NEXT RACE 倒计时 */}
-        <div className="hero-race relative z-10 pr-8 sm:pr-16 md:pr-32 lg:pr-40">
+        <div className="hero-race relative z-10 pr-8 sm:pr-16 md:pr-32 lg:pr-40 min-w-0">
           <NextRace />
         </div>
 
@@ -478,9 +483,9 @@ export default function Home() {
       {/* ================================================================
            队员
            ================================================================ */}
-      <section id="team" className="py-20 sm:py-32 md:py-48 bg-black">
+      <section id="team" className="pt-8 sm:pt-12 md:pt-20 pb-20 sm:pb-32 md:pb-48 bg-black">
         <div className="section-container">
-          <FadeUp className="mb-20">
+          <FadeUp className="mb-8 sm:mb-12">
             <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
               05 — 队员
             </p>
@@ -493,29 +498,7 @@ export default function Home() {
             </p>
           </FadeUp>
 
-          <FadeUpStagger className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { name: '队长', role: '技术总监', dept: '管理部' },
-              { name: '副队长', role: '底盘组长', dept: '技术部' },
-              { name: '电控组长', role: 'ECU 开发', dept: '技术部' },
-              { name: '空力组长', role: 'CFD 工程师', dept: '技术部' },
-              { name: '车手', role: '测试 & 比赛', dept: '运营部' },
-              { name: '运营组长', role: '赞助 & 宣传', dept: '运营部' },
-              { name: '悬架工程师', role: '动力学仿真', dept: '技术部' },
-              { name: '电控工程师', role: '线束 & PCB', dept: '技术部' },
-            ].map((member) => (
-              <div key={member.role} className="group p-4 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/30 transition-all duration-500">
-                <div className="aspect-square rounded-xl bg-white/[0.03] flex items-center justify-center mb-5 overflow-hidden">
-                  <span className="text-white/10 text-4xl group-hover:scale-110 transition-transform duration-500">
-                    👤
-                  </span>
-                </div>
-                <h3 className="text-lg font-bold tracking-tight">{member.name}</h3>
-                <p className="mt-1 text-sm text-primary-light/80">{member.role}</p>
-                <p className="mt-1 text-xs text-white/20">{member.dept}</p>
-              </div>
-            ))}
-          </FadeUpStagger>
+          <TeamRoster />
         </div>
       </section>
 
@@ -639,7 +622,7 @@ export default function Home() {
            ================================================================ */}
       <section id="contact" className="py-20 sm:py-32 md:py-48 bg-black">
         <div className="section-container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-12 lg:gap-20">
             <FadeUp>
               <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
                 07 — 联系我们
@@ -652,55 +635,46 @@ export default function Home() {
               </p>
               <div className="mt-12 space-y-8">
                 {[
-                  { label: '邮箱', value: 'qzracing@example.com' },
-                  { label: '地址', value: '某某大学工程训练中心' },
-                  { label: '社交媒体', value: '微博 / B站 / 抖音 @QZRacing' },
+                  { label: '队长邮箱', value: '867682320@qq.com' },
+                  { label: '车库地址', value: '浙江大学玉泉校区动力机械及车辆研究所' },
                 ].map((info) => (
                   <div key={info.label}>
                     <p className="text-[10px] tracking-[0.2em] text-white/20">{info.label}</p>
                     <p className="mt-2 text-sm text-white/70">{info.value}</p>
                   </div>
                 ))}
+                <div>
+                  <p className="text-[10px] tracking-[0.2em] text-white/20 mb-3">社交媒体</p>
+                  <div className="flex items-center gap-4">
+                    {[
+                      { label: 'Bilibili', icon: '/icons/media/bilibili.svg', url: 'https://b23.tv/wB9bBKg' },
+                      { label: '小红书', icon: '/icons/media/小红书.svg', url: 'https://xhslink.com/m/1lrYvV8RIOT' },
+                      { label: '微信公众号', icon: '/icons/media/微信公众号.svg', url: 'https://mp.weixin.qq.com/s/-dsM_FGY_mkirlu4JdsNJg' },
+                      { label: '抖音', icon: '/icons/media/抖音.svg', url: 'https://www.douyin.com/user/MS4wLjABAAAAVykikE32q-6pblU0lnC_JhFtWyYtHyCkH9arvJr6fqo' },
+                    ].map((s) => (
+                      <a
+                        key={s.label}
+                        href={s.url}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        title={s.label}
+                        className="opacity-45 hover:opacity-100 transition-opacity duration-300"
+                      >
+                        <img src={s.icon} alt={s.label} className="w-6 h-6 brightness-0 invert" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
             </FadeUp>
 
             <FadeUp delay={0.3}>
-              <div className="p-6 sm:p-8 md:p-10 rounded-2xl bg-white/[0.02] border border-white/5">
-                <h3 className="text-xl font-bold tracking-tight mb-8">发送消息</h3>
-                <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-                  {[
-                    { label: '姓名', type: 'text', placeholder: '你的姓名' },
-                    { label: '邮箱', type: 'email', placeholder: 'your@email.com' },
-                    { label: '主题', type: 'text', placeholder: '消息主题' },
-                  ].map((field) => (
-                    <div key={field.label}>
-                      <label className="block text-xs tracking-[0.2em] text-white/30 mb-2">
-                        {field.label}
-                      </label>
-                      <input
-                        type={field.type}
-                        placeholder={field.placeholder}
-                        className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-primary/50 transition-colors duration-300"
-                      />
-                    </div>
-                  ))}
-                  <div>
-                    <label className="block text-xs tracking-[0.2em] text-white/30 mb-2">
-                      消息
-                    </label>
-                    <textarea
-                      rows={5}
-                      placeholder="写下你想说的话..."
-                      className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-lg text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-primary/50 transition-colors duration-300 resize-none"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="btn-glass w-full py-3 font-semibold text-sm tracking-wider rounded-full"
-                  >
-                    发送
-                  </button>
-                </form>
+              <div className="rounded-2xl overflow-hidden border border-white/5 aspect-video">
+                <iframe
+                  src="//player.bilibili.com/player.html?bvid=BV1J1QZBbExS&page=1&autoplay=0"
+                  className="w-full h-full"
+                  allowFullScreen
+                />
               </div>
             </FadeUp>
           </div>

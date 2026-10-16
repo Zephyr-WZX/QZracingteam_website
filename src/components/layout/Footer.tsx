@@ -11,13 +11,14 @@ const footerLinks = {
     { label: '合作伙伴', path: '/#partners' },
     { label: '联系我们', path: '/#contact' },
   ],
-  关注我们: [
-    { label: '微博', path: '#' },
-    { label: 'Bilibili', path: '#' },
-    { label: '微信公众号', path: '#' },
-    { label: '抖音', path: '#' },
-  ],
 }
+
+const SOCIAL_LINKS = [
+  { label: 'Bilibili', icon: '/icons/media/bilibili.svg', url: 'https://b23.tv/wB9bBKg' },
+  { label: '小红书', icon: '/icons/media/小红书.svg', url: 'https://xhslink.com/m/1lrYvV8RIOT' },
+  { label: '微信公众号', icon: '/icons/media/微信公众号.svg', url: 'https://mp.weixin.qq.com/s/-dsM_FGY_mkirlu4JdsNJg' },
+  { label: '抖音', icon: '/icons/media/抖音.svg', url: 'https://www.douyin.com/user/MS4wLjABAAAAVykikE32q-6pblU0lnC_JhFtWyYtHyCkH9arvJr6fqo' },
+]
 
 export default function Footer() {
   return (
@@ -56,6 +57,27 @@ export default function Footer() {
               </ul>
             </div>
           ))}
+
+          {/* 关注我们 — 社交媒体图标 */}
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/30 mb-4">
+              关注我们
+            </h4>
+            <div className="flex items-center gap-5">
+              {SOCIAL_LINKS.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  title={s.label}
+                  className="opacity-50 hover:opacity-100 transition-opacity duration-300"
+                >
+                  <img src={s.icon} alt={s.label} className="w-5 h-5 brightness-0 invert" />
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Bottom */}

@@ -80,9 +80,9 @@ export const ALL_RACES: Race[] = [
     iconOpacity: 50,
     desc: '油电同场竞技 究竟谁将称王',
     status: 'completed',
-    result: ['高速避障第 3 名', '直线加速第 3'],
+    result: ['高速避障第 3 名', '直线加速第 3 名'],
     flagIconPath: 'icons/flag-cn.svg',
-    trackImage: 'images/tracks/tongji.jpg',
+    trackImage: 'images/tracks/tongji.JPG',
   },
 ]
 
