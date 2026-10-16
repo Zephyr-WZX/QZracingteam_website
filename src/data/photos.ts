@@ -1,5 +1,5 @@
 // 自动扫描 public/images/photowall/ 中所有图片——无需手动更新文件名
-const BASE = '/images/photowall';
+const BASE = `${import.meta.env.BASE_URL}images/photowall`;
 
 const imageModules = import.meta.glob<{ default: string }>(
   '/public/images/photowall/*.{jpg,jpeg,JPG,JPEG,png,PNG,webp,WEBP}',

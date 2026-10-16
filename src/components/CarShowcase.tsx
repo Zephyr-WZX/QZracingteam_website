@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import gsap from 'gsap'
 import { ALL_CARS } from '@/data/cars'
 import { FadeUp } from '@/components/animation'
+import { assetPath } from '@/utils'
 
 export default function CarShowcase() {
   const [index, setIndex] = useState(0)
@@ -64,7 +65,7 @@ export default function CarShowcase() {
               <span style={{ color: car.numberColor ?? '#3388CC', opacity: 0.8 }}>{digits}</span>
             </span>
             <img
-              src={`/${car.imagePath}`}
+              src={assetPath(car.imagePath)}
               alt={car.name}
               className="relative z-10 w-full max-w-[640px] sm:max-w-[840px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
             />

@@ -1,6 +1,11 @@
 /**
- * 合并类名工具
+ * 为静态资源添加部署基础路径
  */
+export function assetPath(path: string): string {
+  return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`
+}
+
+/** 合并类名工具 */
 export function cn(...classes: (string | false | null | undefined)[]): string {
   return classes.filter(Boolean).join(' ')
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
+import { assetPath } from '@/utils'
 
 const MENU_ITEMS = [
   { label: '赛车', anchor: 'cars' },
@@ -146,11 +147,11 @@ export default function Navbar() {
           {/* ===== 左侧：Logo（菜单打开时隐藏，点击回首页） ===== */}
           {!menuOpen && (
             <a
-              href="/"
+              href={import.meta.env.BASE_URL}
               className="flex items-center gap-3 text-2xl font-black tracking-tighter select-none cursor-pointer"
               onClick={handleLogoClick}
             >
-              <img src="/icons/teamlogo.svg" alt="QZ Racing" className="w-7 h-7 sm:w-8 sm:h-8 brightness-0 invert" />
+              <img src={assetPath('icons/teamlogo.svg')} alt="QZ Racing" className="w-7 h-7 sm:w-8 sm:h-8 brightness-0 invert" />
             </a>
           )}
 
@@ -228,7 +229,7 @@ export default function Navbar() {
           ref={overlayRef}
           className="menu-overlay fixed inset-0 z-[55] overflow-y-auto"
           style={{
-            backgroundImage: 'url(/images/nav-bg.jpg)',
+            backgroundImage: `url(${assetPath('images/nav-bg.jpg')})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}

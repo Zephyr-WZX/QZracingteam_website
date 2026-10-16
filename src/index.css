@@ -4,15 +4,15 @@
 
 /* ===== 自定义字体 ===== */
 @font-face {
-  font-family: 'Archivo Black'; src: url('/fonts/ArchivoBlack-Regular.ttf') format('truetype');
+  font-family: 'Archivo Black'; src: url('../public/fonts/ArchivoBlack-Regular.ttf') format('truetype');
   font-weight: 400; font-display: swap;
 }
 @font-face {
-  font-family: 'Russo One'; src: url('/fonts/RussoOne-Regular.ttf') format('truetype');
+  font-family: 'Russo One'; src: url('../public/fonts/RussoOne-Regular.ttf') format('truetype');
   font-weight: 400; font-display: swap;
 }
 @font-face {
-  font-family: 'Noto Sans SC Black'; src: url('/fonts/NotoSansSC-Black-subset.woff2') format('woff2');
+  font-family: 'Noto Sans SC Black'; src: url('../public/fonts/NotoSansSC-Black-subset.woff2') format('woff2');
   font-weight: 900; font-display: swap; unicode-range: U+4E00-9FFF, U+3000-303F, U+FF00-FFEF;
 }
 

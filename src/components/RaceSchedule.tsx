@@ -117,7 +117,7 @@ export default function RaceSchedule({ index, onChange, animDir }: Props) {
                     {fmtDay(r.date)}
                   </span>
                   <div className="flex flex-col gap-0.5">
-                    <img src={`/${r.flagIconPath}`} alt="" className="w-5 h-4 sm:w-6 sm:h-5 object-contain" />
+                    <img src={`${import.meta.env.BASE_URL}${r.flagIconPath}`} alt="" className="w-5 h-4 sm:w-6 sm:h-5 object-contain" />
                     <span
                       className={`text-[10px] sm:text-xs tracking-[0.12em] leading-none whitespace-nowrap ${
                         active ? 'text-white/50' : 'text-white/15'

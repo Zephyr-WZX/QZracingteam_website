@@ -13,6 +13,9 @@ import TeamRoster from '@/components/TeamRoster'
 import { ALL_RACES } from '@/data/race'
 import { MAIN_SPONSORS, PARTNERS, SPECIAL_THANKS } from '@/data/sponsors'
 import { AWARDS } from '@/data/awards'
+import { assetPath } from '@/utils'
+
+const awardItems = AWARDS.map((award) => ({ ...award, image: assetPath(award.image) }))
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -251,7 +254,7 @@ export default function Home() {
         {/* 赛车背景图 — overflow-hidden 裁剪缩放溢出 */}
         <div className="hero-image absolute inset-0 z-0 overflow-hidden">
           <img
-            src="/images/hero-bg.png"
+            src={assetPath('images/hero-bg.png')}
             alt="QZ Racing 赛车"
             className="w-full h-full object-cover"
             style={{ scale: '1.05', filter: 'blur(6px) saturate(0.1)' }}
@@ -391,7 +394,7 @@ export default function Home() {
             }}
           >
             <img
-              src={`/${ALL_RACES[raceIndex].trackImage}`}
+              src={assetPath(ALL_RACES[raceIndex].trackImage!)}
               alt=""
               className="w-full h-auto object-contain object-left"
               style={{ scale: '1.2' }}
@@ -470,7 +473,7 @@ export default function Home() {
         {/* CircularGallery — 全宽 WebGL 3D 展示 */}
         <div className="mt-0 sm:mt-2 h-[420px] sm:h-[500px]" style={{ position: 'relative' }}>
           <CircularGallery
-            items={AWARDS}
+            items={awardItems}
             bend={2}
             textColor="#ffffff"
             borderRadius={0.1}
@@ -536,7 +539,7 @@ export default function Home() {
               {MAIN_SPONSORS.map((s) => {
                 const img = (
                   <img
-                    src={`/${s.logo}`}
+                    src={assetPath(s.logo)}
                     alt={s.name}
                     className="h-14 sm:h-20 md:h-28 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-300"
                   />
@@ -563,7 +566,7 @@ export default function Home() {
           <FadeUp>
             <LogoLoop
               logos={PARTNERS.map((s) => ({
-                src: `/${s.logo}`,
+                src: assetPath(s.logo),
                 alt: s.name,
                 ...(s.url ? { href: s.url } : {}),
               }))}
@@ -591,7 +594,7 @@ export default function Home() {
                   {SPECIAL_THANKS.map((s) => {
                     const img = (
                       <img
-                        src={`/${s.logo}`}
+                        src={assetPath(s.logo)}
                         alt={s.name}
                         className="h-10 sm:h-14 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
                       />
@@ -660,7 +663,7 @@ export default function Home() {
                         title={s.label}
                         className="opacity-45 hover:opacity-100 transition-opacity duration-300"
                       >
-                        <img src={s.icon} alt={s.label} className="w-6 h-6 brightness-0 invert" />
+                        <img src={assetPath(s.icon)} alt={s.label} className="w-6 h-6 brightness-0 invert" />
                       </a>
                     ))}
                   </div>
@@ -687,7 +690,7 @@ export default function Home() {
       <footer className="py-16 sm:py-20 bg-black">
         <FadeUp>
           <div className="section-container flex flex-col items-center gap-6">
-            <img src="/icons/teamlogo.svg" alt="QZ Racing Team" className="w-16 h-16 sm:w-20 sm:h-20 brightness-0 invert opacity-50" />
+            <img src={assetPath('icons/teamlogo.svg')} alt="QZ Racing Team" className="w-16 h-16 sm:w-20 sm:h-20 brightness-0 invert opacity-50" />
             <p className="text-[10px] sm:text-xs tracking-[0.2em] text-white/20">
               &copy; {new Date().getFullYear()} QZ RACING TEAM. ALL RIGHTS RESERVED.
             </p>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { assetPath } from '@/utils'
 
 /* ================================================================
    赛道 SVG 图标 — 根据 iconPath 动态加载 SVG 并注入 fill 颜色
@@ -44,7 +45,7 @@ export default function TrackIcon({
       setSvgData(cache.get(iconPath)!)
       return
     }
-    fetch(`/${iconPath}`)
+    fetch(assetPath(iconPath))
       .then((r) => r.text())
       .then((text) => {
         const parsed = parseSvg(text)

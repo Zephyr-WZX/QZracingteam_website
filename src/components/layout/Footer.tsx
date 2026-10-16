@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { assetPath } from '@/utils'
 
 const footerLinks = {
   导航: [
@@ -73,7 +74,7 @@ export default function Footer() {
                   title={s.label}
                   className="opacity-50 hover:opacity-100 transition-opacity duration-300"
                 >
-                  <img src={s.icon} alt={s.label} className="w-5 h-5 brightness-0 invert" />
+                  <img src={assetPath(s.icon)} alt={s.label} className="w-5 h-5 brightness-0 invert" />
                 </a>
               ))}
             </div>

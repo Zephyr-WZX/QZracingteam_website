@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { TEAM_GROUPS, type Member, type TeamGroup } from '@/data/members'
 import TiltedCard from '@/components/TiltedCard'
+import { assetPath } from '@/utils'
 
 /* ================================================================
    队员名册 — 组索引 tab 切换 + TiltedCard 卡片
@@ -50,7 +51,7 @@ function MemberCard({
   const src = member.avatar
     ? member.avatar.startsWith('http')
       ? member.avatar
-      : `/${member.avatar}`
+      : assetPath(member.avatar)
     : placeholder(member.name)
   return (
     <TiltedCard
