@@ -75,13 +75,6 @@
 .site-home .tilted-card-overlay { transform: translateZ(20px); }
 .site-home .item-wrapper > .item-img { border-radius: 5px; box-shadow: 0 0 0 1px #d9e6f118, 0 12px 24px #0004; }
 .site-home #contact iframe { filter: saturate(.8); }
-.site-nav { border-bottom: 1px solid #d9e6f112; background: #090d13d9; box-shadow: 0 2px 24px #0002; }
-.site-nav .nav-capsule { border-radius: 4px; border: 1px solid #dce7f51c; background: #ffffff04; }
-.site-nav .nav-capsule:hover { background: #ffffff0a; border-color: #dce7f54d; }
-.nav-wordmark { display: flex; flex-direction: column; gap: 2px; padding-left: 12px; border-left: 1px solid #ffffff25; white-space: nowrap; }
-.site-nav .nav-contact { white-space: nowrap; }
-.nav-wordmark strong { font: 400 22px/1 'Bebas Neue', sans-serif; letter-spacing: .11em; }
-.nav-wordmark span { font-size: 8px; line-height: 1; color: #8b9bab; letter-spacing: .14em; }
 .site-footer { background: #080c11; border-top: 1px solid #d9e6f11c; }
 .site-footer > div { position: relative; }
 .site-footer h4 { color: #9aabba; }
@@ -145,8 +138,6 @@
   .hero-explore > span:first-child { color: #8a99a7; }
   .hero-blueprint { right: 20px; width: calc(100% - 40px); }
   .site-home > section:not(.editorial-hero)::before { left: 20px; right: 20px; }
-  .nav-wordmark strong { font-size: 19px; }
-  .nav-wordmark span { font-size: 7px; }
 }
 @media (max-width: 360px) {
   .race-live-panel { grid-template-columns: 1fr; gap: 12px; }
@@ -154,6 +145,4 @@
   .hero-spec-note { display: none; }
   .hero-cta { gap: 8px; }
   .race-button { gap: 18px; padding-inline: 13px; }
-  .site-nav .nav-contact { padding-inline: 10px; }
-  .site-nav .section-container > div { gap: 8px; }
 }

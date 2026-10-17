@@ -2,6 +2,7 @@ import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react
 import { useLocation, useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import { assetPath } from '@/utils'
+import '../../styles/navigation.css'
 
 const MENU_ITEMS = [
   { label: '赛车', anchor: 'cars' },
@@ -15,20 +16,12 @@ const MENU_ITEMS = [
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
   const navRef = useRef<HTMLElement>(null)
   const menuItemsRef = useRef<(HTMLButtonElement | null)[]>([])
   const overlayRef = useRef<HTMLDivElement>(null)
   const menuBtnRef = useRef<HTMLButtonElement>(null)
-
-  // 滚动检测
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   // 路由变化时关闭菜单
   useEffect(() => {
@@ -139,50 +132,30 @@ export default function Navbar() {
     <>
       <nav
         ref={navRef}
-        data-hero-top={location.pathname === '/' && !scrolled && !menuOpen ? 'true' : undefined}
-        className={`site-nav fixed top-0 left-0 right-0 transition-all duration-500 backdrop-blur-xl ${
+        className={`site-nav fixed top-0 left-0 right-0 ${
           menuOpen ? 'z-[60]' : 'z-50'
-        } ${scrolled ? 'py-3' : 'py-5'}`}
+        }`}
       >
         <div className="section-container flex items-center justify-between">
           {/* ===== 左侧：Logo（菜单打开时隐藏，点击回首页） ===== */}
           {!menuOpen && (
             <a
               href={import.meta.env.BASE_URL}
-              className="flex min-h-11 min-w-11 items-center gap-3 text-2xl font-black tracking-tighter select-none cursor-pointer"
+              className="nav-brand"
               onClick={handleLogoClick}
             >
               <img src={assetPath('icons/teamlogo.svg')} alt="QZ Racing" className="w-7 h-7 sm:w-8 sm:h-8 brightness-0 invert" />
-              <span className="nav-wordmark"><strong>QZ RACING</strong><span>ZHEJIANG UNIVERSITY</span></span>
+              <span className="nav-wordmark">QZ RACING</span>
             </a>
           )}
 
           {/* ===== 右侧：胶囊按钮 ===== */}
-          <div className="flex items-center gap-3 ml-auto">
-            {/* 胶囊按钮 — 无边框毛玻璃 */}
-            <style>{`
-              .nav-capsule {
-                display: flex; align-items: center; justify-content: center;
-                height: 44px; border-radius: 9999px;
-                background: rgba(255,255,255,0.06);
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-                border: none;
-                color: rgba(255,255,255,0.85);
-                transition: all 0.35s ease;
-                cursor: pointer; outline: none;
-              }
-              .nav-capsule:hover {
-                background: rgba(255,255,255,0.12);
-                color: #fff;
-              }
-            `}</style>
-
+          <div className="nav-actions">
             {/* 联系我们（菜单打开时隐藏） */}
             {!menuOpen && (
               <button
                 onClick={() => handleMenuClick('contact')}
-                className="nav-capsule nav-contact px-5 text-xs font-medium tracking-wider"
+                className="nav-contact"
               >
                 联系我们
               </button>
@@ -192,34 +165,17 @@ export default function Navbar() {
             <button
               ref={menuBtnRef}
               onClick={() => setMenuOpen((prev) => !prev)}
-              className="nav-capsule w-11 relative"
+              className="nav-menu-button"
+              aria-expanded={menuOpen}
+              aria-controls="site-menu"
               aria-label={menuOpen ? '关闭菜单' : '打开菜单'}
             >
-              <div className="relative w-[18px] h-[12px]">
-                {/* 顶线 */}
-                <span
-                  className="absolute left-0 top-0 w-full h-[1.5px] bg-current rounded-full transition-all duration-350"
-                  style={{
-                    transform: menuOpen
-                      ? 'translateY(5.25px) rotate(45deg)'
-                      : 'translateY(0) rotate(0deg)',
-                  }}
-                />
-                {/* 中线 */}
-                <span
-                  className="absolute left-0 top-[5.25px] w-full h-[1.5px] bg-current rounded-full transition-all duration-350"
-                  style={{ opacity: menuOpen ? 0 : 1, transform: menuOpen ? 'scaleX(0)' : 'scaleX(1)' }}
-                />
-                {/* 底线 */}
-                <span
-                  className="absolute left-0 top-[10.5px] w-full h-[1.5px] bg-current rounded-full transition-all duration-350"
-                  style={{
-                    transform: menuOpen
-                      ? 'translateY(-5.25px) rotate(-45deg)'
-                      : 'translateY(0) rotate(0deg)',
-                  }}
-                />
-              </div>
+              <span>{menuOpen ? '关闭' : '菜单'}</span>
+              <svg className="nav-menu-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
+                {menuOpen
+                  ? <path d="m6 6 12 12M6 18 18 6" />
+                  : <path d="M3 6h18M3 12h18M3 18h18" />}
+              </svg>
             </button>
           </div>
         </div>
@@ -229,6 +185,7 @@ export default function Navbar() {
       {menuOpen && (
         <div
           ref={overlayRef}
+          id="site-menu"
           className="menu-overlay fixed inset-0 z-[55] overflow-y-auto"
           style={{
             backgroundImage: `url(${assetPath('images/nav-bg.jpg')})`,

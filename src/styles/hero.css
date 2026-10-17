@@ -29,14 +29,6 @@
 .automotive-hero__scroll { position: absolute; bottom: 20px; left: calc(50% - 22px); display: grid; place-items: center; width: 44px; height: 44px; color: #ffffffb3; transition: color .2s; }
 .automotive-hero__scroll:hover { color: white; }
 
-/* The existing navigation becomes transparent only over the opening image. */
-.site-nav[data-hero-top='true'] { background: transparent; border-color: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
-.site-nav[data-hero-top='true'] .nav-wordmark { border-left: 0; padding-left: 3px; }
-.site-nav[data-hero-top='true'] .nav-wordmark strong { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; letter-spacing: .2em; }
-.site-nav[data-hero-top='true'] .nav-wordmark > span { display: none; }
-.site-nav[data-hero-top='true'] .nav-capsule { background: transparent; border-color: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
-.site-nav[data-hero-top='true'] .nav-capsule:hover { background: #ffffff12; }
-
 @media (min-width: 1800px) {
   .automotive-hero__photograph { inset: -7% -7% 7% 7%; }
 }
