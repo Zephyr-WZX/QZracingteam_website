@@ -19,8 +19,6 @@ export interface Car {
   name: string
   /** 侧视图图片路径（public/images/ 下） */
   imagePath: string
-  /** 首屏用的压缩素材，可选，默认使用 imagePath */
-  heroImagePath?: string
   /** 技术参数 */
   specs: CarSpec[]
   /** 描述 */
@@ -52,7 +50,6 @@ export const ALL_CARS: Car[] = [
     number: 'E69',
     name: '启真·E69',
     imagePath: 'images/E69.png',
-    heroImagePath: 'images/E69-hero.webp',
     specs: [
       { label: '0-100 km/h', value: '3.8s' },
       { label: '车重', value: '235kg' },
