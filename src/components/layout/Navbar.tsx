@@ -139,6 +139,7 @@ export default function Navbar() {
     <>
       <nav
         ref={navRef}
+        data-hero-top={location.pathname === '/' && !scrolled && !menuOpen ? 'true' : undefined}
         className={`site-nav fixed top-0 left-0 right-0 transition-all duration-500 backdrop-blur-xl ${
           menuOpen ? 'z-[60]' : 'z-50'
         } ${scrolled ? 'py-3' : 'py-5'}`}
