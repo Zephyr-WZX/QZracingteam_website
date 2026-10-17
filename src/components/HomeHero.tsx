@@ -35,14 +35,14 @@ export default function HomeHero() {
       </div>
       <div className="automotive-hero__shade" aria-hidden="true" />
       <div className="automotive-hero__content">
-        <p className="automotive-hero__identity automotive-hero__reveal">浙江大学启真车队<span>QZ RACING</span></p>
-        <h1 id="hero-title" className="automotive-hero__title automotive-hero__reveal">
-          <span>做难而</span><span>正确的事情。</span>
-        </h1>
-        <a className="automotive-hero__cta automotive-hero__reveal" href="#cars">
-          探索赛车
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg>
-        </a>
+        <p className="automotive-hero__identity automotive-hero__reveal">浙江大学</p>
+        <h1 id="hero-title" className="automotive-hero__title automotive-hero__reveal">启真车队</h1>
+        <p className="automotive-hero__wordmark automotive-hero__reveal">QZ RACING</p>
+        <p className="automotive-hero__slogan automotive-hero__reveal">做难而正确的事情</p>
+        <div className="automotive-hero__actions automotive-hero__reveal">
+          <a href="#cars" className="btn-glass min-h-11 px-5 py-3 md:px-8 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full">探索赛车</a>
+          <a href="#contact" className="btn-glass min-h-11 px-5 py-3 md:px-8 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full">联系我们</a>
+        </div>
       </div>
       <a className="automotive-hero__scroll" href="#cars" aria-label="向下浏览赛车">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1" aria-hidden="true"><path d="M12 3v17m-6-6 6 6 6-6" /></svg>
