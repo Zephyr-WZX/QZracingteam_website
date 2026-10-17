@@ -18,7 +18,7 @@ function getColumns() {
   if (w >= 1500) return 5;
   if (w >= 1000) return 4;
   if (w >= 600) return 3;
-  if (w >= 400) return 2;
+  if (w >= 360) return 2;
   return 1;
 }
 
@@ -94,7 +94,7 @@ export default function PhotoWall() {
           <button
             onClick={goPrev}
             disabled={safePage === 0}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/[0.06] backdrop-blur-md border-none flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.12] transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed"
+            className="w-11 h-11 rounded-full bg-white/[0.06] backdrop-blur-md border-none flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.12] transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed"
             aria-label="上一页"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -107,7 +107,7 @@ export default function PhotoWall() {
           <button
             onClick={goNext}
             disabled={safePage >= pages.length - 1}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/[0.06] backdrop-blur-md border-none flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.12] transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed"
+            className="w-11 h-11 rounded-full bg-white/[0.06] backdrop-blur-md border-none flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.12] transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed"
             aria-label="下一页"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">

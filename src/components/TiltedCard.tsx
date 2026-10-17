@@ -56,6 +56,7 @@ export default function TiltedCard({
   const [lastY, setLastY] = useState(0);
 
   function handleMouse(e: React.MouseEvent<HTMLElement>) {
+    if (window.matchMedia('(hover: none), (prefers-reduced-motion: reduce)').matches) return;
     if (!ref.current) return;
 
     const rect = ref.current.getBoundingClientRect();
@@ -77,6 +78,7 @@ export default function TiltedCard({
   }
 
   function handleMouseEnter() {
+    if (window.matchMedia('(hover: none), (prefers-reduced-motion: reduce)').matches) return;
     scale.set(scaleOnHover);
     opacity.set(1);
   }
@@ -118,6 +120,8 @@ export default function TiltedCard({
         <motion.img
           src={imageSrc}
           alt={altText}
+          loading="lazy"
+          decoding="async"
           className="tilted-card-img"
           style={{
             width: imageWidth,

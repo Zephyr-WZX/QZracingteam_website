@@ -482,6 +482,11 @@ class App {
   medias: Media[] = []
   isDown = false
   start = 0
+  startY = 0
+  horizontalDrag = false
+  isVisible = true
+  visibilityObserver?: IntersectionObserver
+  reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   lastInteractionTime = 0
   raf = 0
   boundOnResize!: () => void
@@ -511,13 +516,15 @@ class App {
     )
     this.update()
     this.addEventListeners()
+    this.visibilityObserver = new IntersectionObserver(([entry]) => { this.isVisible = entry.isIntersecting })
+    this.visibilityObserver.observe(container)
   }
 
   createRenderer() {
     this.renderer = new Renderer({
       alpha: true,
       antialias: true,
-      dpr: Math.min(window.devicePixelRatio || 1, 2),
+      dpr: Math.min(window.devicePixelRatio || 1, window.innerWidth < 640 ? 1.5 : 2),
     })
     this.gl = this.renderer.gl
     this.gl.clearColor(0, 0, 0, 0)
@@ -536,8 +543,8 @@ class App {
 
   createGeometry() {
     this.planeGeometry = new Plane(this.gl, {
-      heightSegments: 50,
-      widthSegments: 100,
+      heightSegments: window.innerWidth < 640 ? 16 : 50,
+      widthSegments: window.innerWidth < 640 ? 24 : 100,
     })
   }
 
@@ -586,12 +593,15 @@ class App {
   }
 
   onTouchDown(e: MouseEvent | TouchEvent) {
+    if ('button' in e && e.button !== 0) return
     this.isDown = true
+    this.horizontalDrag = false
     this.lastInteractionTime = performance.now()
     this.scroll.position = this.scroll.current
     this.start = (e as TouchEvent).touches
       ? (e as TouchEvent).touches[0].clientX
       : (e as MouseEvent).clientX
+    this.startY = 'touches' in e ? e.touches[0].clientY : e.clientY
   }
 
   onTouchMove(e: MouseEvent | TouchEvent) {
@@ -600,11 +610,22 @@ class App {
     const x = (e as TouchEvent).touches
       ? (e as TouchEvent).touches[0].clientX
       : (e as MouseEvent).clientX
+    if ('touches' in e && !this.horizontalDrag) {
+      const dx = Math.abs(x - this.start)
+      const dy = Math.abs(e.touches[0].clientY - this.startY)
+      if (dy > 8 && dy > dx) {
+        this.isDown = false
+        return
+      }
+      if (dx < 8) return
+      this.horizontalDrag = true
+    }
     const distance = (this.start - x) * (this.scrollSpeed * 0.025)
     this.scroll.target = this.scroll.position + distance
   }
 
   onTouchUp() {
+    if (!this.isDown) return
     this.isDown = false
     this.lastInteractionTime = performance.now()
     this.onCheck()
@@ -668,7 +689,12 @@ class App {
   update() {
     // Auto-play: 1.5s 无交互后自动滚动，移动端速度减半
     const now = performance.now()
-    if (!this.isDown && now - this.lastInteractionTime > 1500) {
+    if (!this.isVisible) {
+      this.lastInteractionTime = now
+      this.raf = window.requestAnimationFrame(this.update.bind(this))
+      return
+    }
+    if (!this.reducedMotion && !this.isDown && now - this.lastInteractionTime > 1500) {
       const speedMul = this.screen?.width < 640 ? 0.008 : 0.016
       this.scroll.target += this.scrollSpeed * speedMul
     }
@@ -695,25 +721,28 @@ class App {
     this.boundOnKeyDown = this.onKeyDown.bind(this)
 
     window.addEventListener('resize', this.boundOnResize)
-    window.addEventListener('mousedown', this.boundOnTouchDown)
+    this.container.addEventListener('mousedown', this.boundOnTouchDown)
     window.addEventListener('mousemove', this.boundOnTouchMove)
     window.addEventListener('mouseup', this.boundOnTouchUp)
-    window.addEventListener('touchstart', this.boundOnTouchDown)
-    window.addEventListener('touchmove', this.boundOnTouchMove)
-    window.addEventListener('touchend', this.boundOnTouchUp)
+    this.container.addEventListener('touchstart', this.boundOnTouchDown, { passive: true })
+    window.addEventListener('touchmove', this.boundOnTouchMove, { passive: true })
+    window.addEventListener('touchend', this.boundOnTouchUp, { passive: true })
+    window.addEventListener('touchcancel', this.boundOnTouchUp, { passive: true })
 
     this.container?.addEventListener('keydown', this.boundOnKeyDown)
   }
 
   destroy() {
     window.cancelAnimationFrame(this.raf)
+    this.visibilityObserver?.disconnect()
     window.removeEventListener('resize', this.boundOnResize)
-    window.removeEventListener('mousedown', this.boundOnTouchDown)
+    this.container.removeEventListener('mousedown', this.boundOnTouchDown)
     window.removeEventListener('mousemove', this.boundOnTouchMove)
     window.removeEventListener('mouseup', this.boundOnTouchUp)
-    window.removeEventListener('touchstart', this.boundOnTouchDown)
+    this.container.removeEventListener('touchstart', this.boundOnTouchDown)
     window.removeEventListener('touchmove', this.boundOnTouchMove)
     window.removeEventListener('touchend', this.boundOnTouchUp)
+    window.removeEventListener('touchcancel', this.boundOnTouchUp)
     const canvas = this.renderer?.gl?.canvas as HTMLCanvasElement | undefined
     if (canvas?.parentNode) {
       canvas.parentNode.removeChild(canvas)
@@ -793,7 +822,7 @@ export default function CircularGallery({
       ref={containerRef}
       tabIndex={0}
       role="region"
-      aria-label="Circular image gallery. Use left and right arrow keys to navigate."
+      aria-label="成就证书画廊，可左右滑动或使用方向键浏览"
     />
   )
 }

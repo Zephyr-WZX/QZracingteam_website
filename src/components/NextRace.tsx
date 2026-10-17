@@ -45,25 +45,25 @@ export default function NextRace() {
 
   if (!race) {
     return (
-      <div className="flex flex-col items-end gap-5">
+      <div className="flex flex-col items-start gap-5 lg:items-end">
         <p className="text-sm tracking-wider text-white/30">暂无赛事</p>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col items-end gap-4 md:gap-5">
+    <div className="relative flex flex-col items-start gap-4 lg:items-end lg:gap-5">
       {/* 赛道图标 */}
       <TrackIcon
-        className="w-36 h-36 sm:w-48 sm:h-48 md:w-80 md:h-80"
+        className="absolute right-0 top-0 h-20 w-20 lg:relative lg:h-60 lg:w-60 xl:h-80 xl:w-80"
         fill={race.iconColor}
         style={{ opacity: race.iconOpacity / 100 }}
         iconPath={race.iconPath}
       />
 
       {/* NEXT RACE 标签 */}
-      <div className="text-right">
-        <p className="text-xs sm:text-sm md:text-lg text-white/60 mb-1 md:mb-3 flex items-center gap-[0.35em] sm:gap-[0.45em] justify-end">
+      <div className="max-w-[calc(100%_-_6rem)] text-left lg:max-w-none lg:text-right">
+        <p className="text-xs sm:text-sm lg:text-lg text-white/60 mb-1 lg:mb-3 flex items-center gap-[0.35em] sm:gap-[0.45em] lg:justify-end">
           <span className="tracking-[0.15em]">NEXT</span>
           <span
             className="inline-block transition-opacity duration-75"
@@ -80,14 +80,14 @@ export default function NextRace() {
         <p className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold tracking-wider text-white/85">
           {race.name}
         </p>
-        <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] text-white/35 mt-0.5 md:mt-1.5">
+        <p className="text-xs md:text-sm tracking-[0.15em] text-white/65 mt-0.5 md:mt-1.5">
           {race.location}
         </p>
       </div>
 
-      {/* 倒计时 — 移动端分两排，桌面端一排 */}
+      {/* 倒计时 — 窄屏允许自然换行 */}
       {timeLeft ? (
-        <div className="flex flex-col items-end gap-1 sm:gap-2 md:flex-row md:gap-5">
+        <div className="flex flex-wrap items-start gap-3 lg:items-end lg:gap-5">
           <div className="flex gap-1.5 sm:gap-4 md:gap-5">
             {([
               { value: timeLeft.days, label: '天' },
@@ -97,7 +97,7 @@ export default function NextRace() {
                 <span className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tabular-nums tracking-tight">
                   {pad(unit.value)}
                 </span>
-                <span className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] text-white/30 mt-0.5 md:mt-1.5">
+                <span className="text-xs md:text-sm tracking-[0.15em] text-white/60 mt-0.5 md:mt-1.5">
                   {unit.label}
                 </span>
               </div>
@@ -112,7 +112,7 @@ export default function NextRace() {
                 <span className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tabular-nums tracking-tight">
                   {pad(unit.value)}
                 </span>
-                <span className="text-[10px] sm:text-xs md:text-sm tracking-[0.15em] text-white/30 mt-0.5 md:mt-1.5">
+                <span className="text-xs md:text-sm tracking-[0.15em] text-white/60 mt-0.5 md:mt-1.5">
                   {unit.label}
                 </span>
               </div>
@@ -129,7 +129,7 @@ export default function NextRace() {
           const el = document.getElementById('races')
           if (el) el.scrollIntoView({ behavior: 'smooth' })
         }}
-        className="mt-2 text-[10px] sm:text-xs tracking-[0.2em] text-white/30 hover:text-primary-light/80 transition-colors duration-300"
+        className="min-h-11 text-xs tracking-[0.2em] text-white/60 hover:text-primary-light/80 transition-colors duration-300"
       >
         VIEW ALL RACES →
       </button>

@@ -40,6 +40,19 @@
     cursor: default;
   }
 
+  section[id] {
+    scroll-margin-top: 88px;
+  }
+
+  button, a {
+    touch-action: manipulation;
+  }
+
+  :focus-visible {
+    outline: 2px solid #3388CC;
+    outline-offset: 4px;
+  }
+
   ::selection {
     background-color: #004B91;
     color: #ffffff;
@@ -163,4 +176,17 @@
 .anim-scale-in {
   opacity: 0;
   transform: scale(0.9);
+}
+
+.circular-gallery {
+  touch-action: pan-y pinch-zoom;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

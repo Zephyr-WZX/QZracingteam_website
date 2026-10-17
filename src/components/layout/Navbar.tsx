@@ -148,7 +148,7 @@ export default function Navbar() {
           {!menuOpen && (
             <a
               href={import.meta.env.BASE_URL}
-              className="flex items-center gap-3 text-2xl font-black tracking-tighter select-none cursor-pointer"
+              className="flex min-h-11 min-w-11 items-center gap-3 text-2xl font-black tracking-tighter select-none cursor-pointer"
               onClick={handleLogoClick}
             >
               <img src={assetPath('icons/teamlogo.svg')} alt="QZ Racing" className="w-7 h-7 sm:w-8 sm:h-8 brightness-0 invert" />
@@ -161,7 +161,7 @@ export default function Navbar() {
             <style>{`
               .nav-capsule {
                 display: flex; align-items: center; justify-content: center;
-                height: 40px; border-radius: 9999px;
+                height: 44px; border-radius: 9999px;
                 background: rgba(255,255,255,0.06);
                 backdrop-filter: blur(16px);
                 -webkit-backdrop-filter: blur(16px);
@@ -190,7 +190,7 @@ export default function Navbar() {
             <button
               ref={menuBtnRef}
               onClick={() => setMenuOpen((prev) => !prev)}
-              className="nav-capsule w-10 relative"
+              className="nav-capsule w-11 relative"
               aria-label={menuOpen ? '关闭菜单' : '打开菜单'}
             >
               <div className="relative w-[18px] h-[12px]">

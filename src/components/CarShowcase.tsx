@@ -40,13 +40,13 @@ export default function CarShowcase() {
 
   return (
     <FadeUp>
-      <div ref={sectionRef} className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-center min-h-[500px] sm:min-h-[600px]">
+      <div ref={sectionRef} className="grid min-w-0 grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-0 lg:min-h-[600px]">
         {/* ===== 左侧：赛车编号 + 侧视图 ===== */}
-        <div className="flex flex-col pr-6 lg:pr-10 min-h-[500px] sm:min-h-[600px]">
+        <div className="flex min-h-[300px] min-w-0 flex-col sm:min-h-[420px] lg:min-h-[600px] lg:pr-10">
           <div className="flex items-center gap-3 mb-2">
             <button
               onClick={prev}
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/[0.06] backdrop-blur-md border-none flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.12] transition-all duration-300 shrink-0"
+              className="w-11 h-11 rounded-full bg-white/[0.06] backdrop-blur-md border-none flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.12] transition-all duration-300 shrink-0"
               aria-label="上一台"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -58,7 +58,7 @@ export default function CarShowcase() {
 
           <div ref={listRef} className="relative flex items-center justify-center w-full flex-1 mt-4 sm:mt-8">
             <span
-              className="text-[10rem] sm:text-[14rem] md:text-[18rem] lg:text-[22rem] tracking-tighter leading-none tabular-nums select-none pointer-events-none absolute inset-0 flex items-center justify-center -translate-y-16 sm:-translate-y-24"
+              className="text-[clamp(5rem,28vw,14rem)] lg:text-[18rem] xl:text-[22rem] tracking-tighter leading-none tabular-nums select-none pointer-events-none absolute inset-0 flex items-center justify-center -translate-y-8 sm:-translate-y-16 lg:-translate-y-24"
               style={{ fontFamily: "'Archivo Black', 'Russo One', sans-serif" }}
             >
               {letters && <span style={{ color: car.letterColor ?? '#ffffff', opacity: 0.6 }}>{letters}</span>}
@@ -74,7 +74,7 @@ export default function CarShowcase() {
           <div className="flex items-center gap-3 mt-2">
             <button
               onClick={next}
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/[0.06] backdrop-blur-md border-none flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.12] transition-all duration-300 shrink-0"
+              className="w-11 h-11 rounded-full bg-white/[0.06] backdrop-blur-md border-none flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.12] transition-all duration-300 shrink-0"
               aria-label="下一台"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -90,15 +90,15 @@ export default function CarShowcase() {
         </div>
 
         {/* ===== 右侧：描述 + 技术参数 ===== */}
-        <div ref={rightRef} className="flex flex-col items-center justify-center pl-6 lg:pl-10">
-          <p className="text-4xl sm:text-6xl text-white mb-16 sm:mb-20 text-center leading-relaxed font-black tracking-tighter">
+        <div ref={rightRef} className="flex min-w-0 flex-col items-center justify-center lg:pl-10">
+          <p className="text-2xl sm:text-4xl lg:text-6xl text-white mb-6 sm:mb-10 lg:mb-20 text-center leading-relaxed font-black tracking-tighter">
             {car.desc}
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-8 sm:gap-x-10 gap-y-5 sm:gap-y-6">
+          <div className="grid w-full max-w-xl grid-cols-2 sm:grid-cols-3 gap-x-5 sm:gap-x-10 gap-y-5 sm:gap-y-6">
             {car.specs.map((s) => (
-              <div key={s.label} className="flex flex-col items-center">
-                <span className="text-2xl sm:text-3xl font-black text-white tabular-nums">{s.value}</span>
-                <span className="text-[10px] sm:text-xs tracking-[0.12em] text-white/30 mt-1">{s.label}</span>
+              <div key={s.label} className="flex min-w-0 flex-col items-center text-center">
+                <span className="max-w-full break-words text-xl sm:text-3xl font-black text-white tabular-nums">{s.value}</span>
+                <span className="text-xs tracking-[0.12em] text-white/60 mt-1">{s.label}</span>
               </div>
             ))}
           </div>

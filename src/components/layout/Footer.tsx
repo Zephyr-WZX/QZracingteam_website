@@ -72,7 +72,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer noopener"
                   title={s.label}
-                  className="opacity-50 hover:opacity-100 transition-opacity duration-300"
+                  className="flex h-11 w-11 items-center justify-center opacity-70 hover:opacity-100 transition-opacity duration-300"
                 >
                   <img src={assetPath(s.icon)} alt={s.label} className="w-5 h-5 brightness-0 invert" />
                 </a>

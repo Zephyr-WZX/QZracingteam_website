@@ -51,10 +51,16 @@ export default function Home() {
     if (!section) return
 
     // 先用 rAF 让浏览器完成 layout，再初始化 ScrollTrigger
-    let ctx: gsap.Context | null = null
+    const media = gsap.matchMedia()
 
     const raf = requestAnimationFrame(() => {
-      ctx = gsap.context(() => {
+      media.add({ desktop: '(min-width: 1024px)', mobile: '(max-width: 1023px)', reduced: '(prefers-reduced-motion: reduce)' }, (context) => {
+        const { desktop, reduced } = context.conditions!
+        if (reduced) {
+          gsap.set('.hero-image img', { scale: 1.05, filter: 'none' })
+          gsap.set('.hero-veil', { opacity: desktop ? 0.55 : 0.68 })
+          return
+        }
         // 文字入场（不受 scroll 影响）
         gsap.fromTo(
           '.hero-title',
@@ -64,7 +70,7 @@ export default function Home() {
         gsap.fromTo(
           '.hero-sub',
           { opacity: 0, y: 40 },
-          { opacity: 0.6, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.9 },
+          { opacity: desktop ? 0.6 : 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.9 },
         )
         gsap.fromTo(
           '.hero-cta',
@@ -77,6 +83,12 @@ export default function Home() {
           { opacity: 0, x: 60 },
           { opacity: 1, x: 0, duration: 1, ease: 'power4.out', delay: 0.8 },
         )
+
+        if (!desktop) {
+          gsap.set('.hero-image img', { scale: 1.05, filter: 'none' })
+          gsap.set('.hero-veil', { opacity: 0.68 })
+          return
+        }
 
         // === 核心：pin + scrub ===
         const tl = gsap.timeline({
@@ -132,7 +144,7 @@ export default function Home() {
 
     return () => {
       cancelAnimationFrame(raf)
-      ctx?.revert()
+      media.revert()
     }
   }, [])
 
@@ -141,14 +153,16 @@ export default function Home() {
      ================================================================ */
   useEffect(() => {
     let localCtx: gsap.Context | null = null
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const compact = window.matchMedia('(max-width: 1023px)').matches
 
     const timer = setTimeout(() => {
       localCtx = gsap.context(() => {
         // FadeUp
         gsap.utils.toArray<HTMLElement>('[data-anim="fadeup"]').forEach((el) => {
           const delay = parseFloat(el.dataset.delay || '0')
-          const y = parseFloat(el.dataset.y || '60')
-          const dur = parseFloat(el.dataset.duration || '0.8')
+          const y = compact ? 24 : parseFloat(el.dataset.y || '60')
+          const dur = compact ? 0.5 : parseFloat(el.dataset.duration || '0.8')
           gsap.fromTo(
             el,
             { opacity: 0, y },
@@ -218,6 +232,7 @@ export default function Home() {
   // 主要赞助商标识逐个凸显动画
   useEffect(() => {
     const container = sponsorRef.current
+    if (window.matchMedia('(max-width: 1023px), (prefers-reduced-motion: reduce)').matches) return
     if (!container) return
     const items = container.querySelectorAll('.sponsor-item')
     if (items.length === 0) return
@@ -249,7 +264,7 @@ export default function Home() {
       <section
         ref={heroRef}
         id="hero"
-        className="relative h-screen flex items-center justify-between bg-black overflow-hidden"
+        className="hero-section relative flex min-h-[100svh] flex-col items-stretch justify-between gap-8 overflow-hidden bg-black px-5 pb-12 pt-28 sm:px-8 lg:h-screen lg:flex-row lg:items-center lg:gap-0 lg:p-0"
       >
         {/* 赛车背景图 — overflow-hidden 裁剪缩放溢出 */}
         <div className="hero-image absolute inset-0 z-0 overflow-hidden">
@@ -280,14 +295,14 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 z-[5] h-1/3 bg-gradient-to-t from-black to-transparent pointer-events-none" />
 
         {/* 文字内容 — 中英混合，不对称排版 */}
-        <div className="hero-content relative z-10 pl-8 sm:pl-16 md:pl-32 lg:pl-40 min-w-0">
-          {/* 顶部标签行 + 标题 + 标语 — 移动端整体上移 */}
-          <div className="-mt-44 sm:mt-0">
+        <div className="hero-content relative z-10 min-w-0 lg:pl-16 xl:pl-24 2xl:pl-40">
+          {/* 顶部标签行 + 标题 + 标语 */}
+          <div>
             <div className="mb-5 sm:mb-8 md:mb-12">
-              <p className="hero-sub text-xs sm:text-sm tracking-[0.35em] text-white/40">
+              <p className="hero-sub text-xs sm:text-sm tracking-[0.35em] text-white/65 lg:text-white/40">
                 ZHEJIANG UNIVERSITY
               </p>
-              <p className="hero-sub text-xs sm:text-sm tracking-[0.25em] text-white/25 mt-1.5">
+              <p className="hero-sub text-xs sm:text-sm tracking-[0.25em] text-white/60 lg:text-white/25 mt-1.5">
                 FORMULA STUDENT TEAM
               </p>
             </div>
@@ -295,7 +310,7 @@ export default function Home() {
             {/* 主标题 — 两行不对称 */}
             <h1 className="hero-title font-black text-white leading-none">
               <div className="flex flex-wrap items-baseline gap-x-4 md:gap-x-8">
-                <span className="text-[5rem] sm:text-[6rem] md:text-display-xl lg:text-[12rem] tracking-tight"
+                <span className="text-[clamp(3.5rem,16vw,6rem)] lg:text-[8rem] xl:text-[10rem] 2xl:text-[12rem] tracking-tight"
                   style={{ fontFamily: "'Noto Sans SC Black', sans-serif" }}>
                   启真
                 </span>
@@ -305,7 +320,7 @@ export default function Home() {
                 </span>
               </div>
               <div className="relative inline-flex items-baseline -mt-2 md:-mt-4">
-                <span className="relative z-10 text-[5rem] sm:text-[6rem] md:text-display-xl lg:text-[12rem] primary-text tracking-tight"
+                <span className="relative z-10 text-[clamp(3.5rem,16vw,6rem)] lg:text-[8rem] xl:text-[10rem] 2xl:text-[12rem] primary-text tracking-tight"
                   style={{ fontFamily: "'Noto Sans SC Black', sans-serif" }}>
                   车队
                 </span>
@@ -320,25 +335,25 @@ export default function Home() {
 
             {/* 标语 — 中英双行左对齐 */}
             <div className="mt-8 sm:mt-10 md:mt-14 flex flex-col items-start">
-              <p className="hero-sub text-lg sm:text-xl md:text-2xl text-white/50 font-light tracking-[0.15em] leading-relaxed">
+              <p className="hero-sub text-lg sm:text-xl md:text-2xl text-white/80 lg:text-white/50 font-light tracking-[0.15em] leading-relaxed">
                 做难而正确的事情
               </p>
-              <p className="hero-sub text-xs sm:text-sm text-white/20 tracking-[0.3em] mt-2">
+              <p className="hero-sub text-xs sm:text-sm text-white/60 lg:text-white/20 tracking-[0.3em] mt-2">
                 DO THE HARD THING RIGHT
               </p>
             </div>
 
             {/* 按钮 */}
-            <div className="hero-cta mt-16 sm:mt-10 md:mt-12 flex items-center gap-3 md:gap-6">
+            <div className="hero-cta mt-8 sm:mt-10 md:mt-12 flex items-center gap-3 md:gap-6">
               <a
                 href="#cars"
-                className="btn-glass px-6 py-3 md:px-8 md:py-3 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full"
+                className="btn-glass min-h-11 px-5 py-3 md:px-8 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full"
               >
                 探索赛车
               </a>
               <a
                 href="#contact"
-                className="btn-glass px-6 py-3 md:px-8 md:py-3 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full"
+                className="btn-glass min-h-11 px-5 py-3 md:px-8 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full"
               >
                 联系我们
               </a>
@@ -347,12 +362,12 @@ export default function Home() {
         </div>
 
         {/* 右侧 — NEXT RACE 倒计时 */}
-        <div className="hero-race relative z-10 pr-8 sm:pr-16 md:pr-32 lg:pr-40 min-w-0">
+        <div className="hero-race relative z-10 w-full min-w-0 border-t border-white/15 pt-6 lg:w-auto lg:border-0 lg:pr-16 lg:pt-0 xl:pr-24 2xl:pr-40">
           <NextRace />
         </div>
 
         {/* 底部滚动提示 */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 scroll-indicator">
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 hidden flex-col items-center gap-2 lg:flex scroll-indicator">
           <span className="text-[10px] tracking-[0.3em] text-white/30">滚动探索</span>
           <div className="w-[1px] h-8 bg-gradient-to-b from-white/40 to-transparent" />
         </div>
@@ -661,7 +676,7 @@ export default function Home() {
                         target="_blank"
                         rel="noreferrer noopener"
                         title={s.label}
-                        className="opacity-45 hover:opacity-100 transition-opacity duration-300"
+                        className="flex h-11 w-11 items-center justify-center opacity-70 hover:opacity-100 transition-opacity duration-300"
                       >
                         <img src={assetPath(s.icon)} alt={s.label} className="w-6 h-6 brightness-0 invert" />
                       </a>

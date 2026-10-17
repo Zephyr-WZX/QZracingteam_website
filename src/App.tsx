@@ -13,6 +13,10 @@ export default function App() {
   const curtainRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.set(curtainRef.current, { height: 0 })
+      return
+    }
     // 入场帷幕动画
     const tl = gsap.timeline()
     tl.set(curtainRef.current, { height: '100vh' })
@@ -22,6 +26,7 @@ export default function App() {
       ease: 'power3.inOut',
       delay: 0.3,
     })
+    return () => { tl.kill() }
   }, [])
 
   return (
