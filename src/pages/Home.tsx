@@ -1,9 +1,9 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { FadeUp } from '@/components/animation'
-import NextRace from '@/components/NextRace'
+import HomeHero from '@/components/HomeHero'
 import RaceSchedule from '@/components/RaceSchedule'
 import CarShowcase from '@/components/CarShowcase'
 import PhotoWall from '@/components/PhotoWall'
@@ -25,7 +25,6 @@ gsap.registerPlugin(ScrollTrigger)
    ================================================================ */
 
 export default function Home() {
-  const heroRef = useRef<HTMLDivElement>(null)
   const location = useLocation()
   const [raceIndex, setRaceIndex] = useState(0)
   const [raceAnimDir, setRaceAnimDir] = useState<'up' | 'down'>('down')
@@ -45,111 +44,8 @@ export default function Home() {
     }
   }, [location.hash])
 
-  // Hero: 滚动揭示动画（暗→亮 + 镜头拉近）
-  useLayoutEffect(() => {
-    const section = heroRef.current
-    if (!section) return
-
-    // 先用 rAF 让浏览器完成 layout，再初始化 ScrollTrigger
-    const media = gsap.matchMedia()
-
-    const raf = requestAnimationFrame(() => {
-      media.add({ desktop: '(min-width: 1024px)', mobile: '(max-width: 1023px)', reduced: '(prefers-reduced-motion: reduce)' }, (context) => {
-        const { desktop, reduced } = context.conditions!
-        if (reduced) {
-          gsap.set('.hero-image img', { scale: 1.05, filter: 'none' })
-          gsap.set('.hero-veil', { opacity: desktop ? 0.55 : 0.68 })
-          return
-        }
-        // 文字入场（不受 scroll 影响）
-        gsap.fromTo(
-          '.hero-title',
-          { opacity: 0, y: 120 },
-          { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out', delay: 0.6 },
-        )
-        gsap.fromTo(
-          '.hero-sub',
-          { opacity: 0, y: 40 },
-          { opacity: desktop ? 0.6 : 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.9 },
-        )
-        gsap.fromTo(
-          '.hero-cta',
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 1.1 },
-        )
-        // 右侧赛事倒计时入场
-        gsap.fromTo(
-          '.hero-race',
-          { opacity: 0, x: 60 },
-          { opacity: 1, x: 0, duration: 1, ease: 'power4.out', delay: 0.8 },
-        )
-
-        if (!desktop) {
-          gsap.set('.hero-image img', { scale: 1.05, filter: 'none' })
-          gsap.set('.hero-veil', { opacity: 0.68 })
-          return
-        }
-
-        // === 核心：pin + scrub ===
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: 'top top',
-            end: '+=150%',
-            pin: true,
-            pinSpacing: true,
-            scrub: 1,
-            invalidateOnRefresh: true,
-          },
-        })
-
-        // 黑色遮罩：0.9 → 0.02（主变亮层）
-        tl.fromTo(
-          '.hero-veil',
-          { opacity: 0.8 },
-          { opacity: 0.02, ease: 'power2.inOut', duration: 1 },
-          0,
-        )
-
-        // 图片缩放：1.05 → 1.18
-        tl.fromTo(
-          '.hero-image img',
-          { scale: 1.05 },
-          { scale: 1.18, ease: 'power3.inOut', duration: 1 },
-          0,
-        )
-
-        // 图片滤镜：blur 6px + 低饱和 → 清晰 + 高饱和
-        tl.fromTo(
-          '.hero-image img',
-          { filter: 'blur(6px) saturate(0.1)' },
-          { filter: 'blur(0px) saturate(1.1)', ease: 'power2.inOut', duration: 1 },
-          0,
-        )
-
-        // 暗角
-        tl.fromTo('.hero-vignette', { opacity: 0.75 }, { opacity: 0.18, ease: 'power2.in', duration: 1 }, 0)
-
-        // 文字 & 赛事倒计时 向两侧退场
-        tl.to('.hero-content', { opacity: 0, x: -80, ease: 'power2.in', duration: 0.5 }, 0.15)
-        tl.to('.hero-race', { opacity: 0, x: 80, ease: 'power2.in', duration: 0.5 }, 0.15)
-
-        // 滚动指示器
-        tl.to('.scroll-indicator', { opacity: 0, duration: 0.25 }, 0.03)
-      }, section)
-
-      // 再等一帧让 pin-spacer 生效后刷新
-      requestAnimationFrame(() => ScrollTrigger.refresh())
-    })
-
-    return () => {
-      cancelAnimationFrame(raf)
-      media.revert()
-    }
-  }, [])
-
   /* ================================================================
-     全局入场动画 — 延迟 500ms 等 Hero pin-spacer 完成后统一注册
+     全局入场动画 — 统一注册区块滚动入场
      ================================================================ */
   useEffect(() => {
     let localCtx: gsap.Context | null = null
@@ -255,123 +151,8 @@ export default function Home() {
   }, [])
 
   return (
-    <>
-      {/* ================================================================
-           Hero — 赛车图片滚动揭示
-           初始: 极暗 + 正常缩放
-           滚动: 逐渐变亮 + 镜头拉近
-           ================================================================ */}
-      <section
-        ref={heroRef}
-        id="hero"
-        className="hero-section relative flex min-h-[100svh] flex-col items-stretch justify-between gap-8 overflow-hidden bg-black px-5 pb-12 pt-28 sm:px-8 lg:h-screen lg:flex-row lg:items-center lg:gap-0 lg:p-0"
-      >
-        {/* 赛车背景图 — overflow-hidden 裁剪缩放溢出 */}
-        <div className="hero-image absolute inset-0 z-0 overflow-hidden">
-          <img
-            src={assetPath('images/hero-bg.png')}
-            alt="QZ Racing 赛车"
-            className="w-full h-full object-cover"
-            style={{ scale: '1.05', filter: 'blur(6px) saturate(0.1)' }}
-          />
-        </div>
-
-        {/* 暗色遮罩 — 从 0.9 → 0.02，核心"变亮"层 */}
-        <div className="hero-veil absolute inset-0 z-[1] bg-black" style={{ opacity: 0.8 }} />
-
-
-
-        {/* 暗角 — 边缘氛围 */}
-        <div
-          className="hero-vignette absolute inset-0 z-[3] pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 85%, rgba(0,0,0,0.85) 100%)',
-            opacity: 0.75,
-          }}
-        />
-
-        {/* 底部渐变过渡 */}
-        <div className="absolute inset-x-0 bottom-0 z-[5] h-1/3 bg-gradient-to-t from-black to-transparent pointer-events-none" />
-
-        {/* 文字内容 — 中英混合，不对称排版 */}
-        <div className="hero-content relative z-10 min-w-0 lg:pl-16 xl:pl-24 2xl:pl-40">
-          {/* 顶部标签行 + 标题 + 标语 */}
-          <div>
-            <div className="mb-5 sm:mb-8 md:mb-12">
-              <p className="hero-sub text-xs sm:text-sm tracking-[0.35em] text-white/65 lg:text-white/40">
-                ZHEJIANG UNIVERSITY
-              </p>
-              <p className="hero-sub text-xs sm:text-sm tracking-[0.25em] text-white/60 lg:text-white/25 mt-1.5">
-                FORMULA STUDENT TEAM
-              </p>
-            </div>
-
-            {/* 主标题 — 两行不对称 */}
-            <h1 className="hero-title font-black text-white leading-none">
-              <div className="flex flex-wrap items-baseline gap-x-4 md:gap-x-8">
-                <span className="text-[clamp(3.5rem,16vw,6rem)] lg:text-[8rem] xl:text-[10rem] 2xl:text-[12rem] tracking-tight"
-                  style={{ fontFamily: "'Noto Sans SC Black', sans-serif" }}>
-                  启真
-                </span>
-                <span className="text-[2rem] sm:text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] text-white/20 font-light tracking-[0.15em] italic"
-                  style={{ fontFamily: 'Georgia, serif' }}>
-                  ×
-                </span>
-              </div>
-              <div className="relative inline-flex items-baseline -mt-2 md:-mt-4">
-                <span className="relative z-10 text-[clamp(3.5rem,16vw,6rem)] lg:text-[8rem] xl:text-[10rem] 2xl:text-[12rem] primary-text tracking-tight"
-                  style={{ fontFamily: "'Noto Sans SC Black', sans-serif" }}>
-                  车队
-                </span>
-                <span
-                  className="hero-title absolute right-0 text-sm sm:text-lg md:text-2xl lg:text-3xl text-white/30 tracking-[0.2em] font-bold whitespace-nowrap"
-                  style={{ bottom: '-1.2em' }}
-                >
-                  QZ RACING
-                </span>
-              </div>
-            </h1>
-
-            {/* 标语 — 中英双行左对齐 */}
-            <div className="mt-8 sm:mt-10 md:mt-14 flex flex-col items-start">
-              <p className="hero-sub text-lg sm:text-xl md:text-2xl text-white/80 lg:text-white/50 font-light tracking-[0.15em] leading-relaxed">
-                做难而正确的事情
-              </p>
-              <p className="hero-sub text-xs sm:text-sm text-white/60 lg:text-white/20 tracking-[0.3em] mt-2">
-                DO THE HARD THING RIGHT
-              </p>
-            </div>
-
-            {/* 按钮 */}
-            <div className="hero-cta mt-8 sm:mt-10 md:mt-12 flex items-center gap-3 md:gap-6">
-              <a
-                href="#cars"
-                className="btn-glass min-h-11 px-5 py-3 md:px-8 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full"
-              >
-                探索赛车
-              </a>
-              <a
-                href="#contact"
-                className="btn-glass min-h-11 px-5 py-3 md:px-8 text-white/85 font-semibold text-sm md:text-base tracking-wider rounded-full"
-              >
-                联系我们
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* 右侧 — NEXT RACE 倒计时 */}
-        <div className="hero-race relative z-10 w-full min-w-0 border-t border-white/15 pt-6 lg:w-auto lg:border-0 lg:pr-16 lg:pt-0 xl:pr-24 2xl:pr-40">
-          <NextRace />
-        </div>
-
-        {/* 底部滚动提示 */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 hidden flex-col items-center gap-2 lg:flex scroll-indicator">
-          <span className="text-[10px] tracking-[0.3em] text-white/30">滚动探索</span>
-          <div className="w-[1px] h-8 bg-gradient-to-b from-white/40 to-transparent" />
-        </div>
-      </section>
+    <div className="site-home">
+      <HomeHero />
 
       {/* ================================================================
            赛车
@@ -530,7 +311,7 @@ export default function Home() {
           <div className="section-container">
             <FadeUp>
               <p className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-primary-light/60 mb-4">
-                05 — 合作伙伴
+                06 — 合作伙伴
               </p>
               <h2 className="text-[2rem] sm:text-display-sm md:text-display-md font-black tracking-tighter">
                 合作<span className="primary-text">伙伴</span>
@@ -699,19 +480,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================================================================
-           页脚
-           ================================================================ */}
-      <footer className="py-16 sm:py-20 bg-black">
-        <FadeUp>
-          <div className="section-container flex flex-col items-center gap-6">
-            <img src={assetPath('icons/teamlogo.svg')} alt="QZ Racing Team" className="w-16 h-16 sm:w-20 sm:h-20 brightness-0 invert opacity-50" />
-            <p className="text-[10px] sm:text-xs tracking-[0.2em] text-white/20">
-              &copy; {new Date().getFullYear()} QZ RACING TEAM. ALL RIGHTS RESERVED.
-            </p>
-          </div>
-        </FadeUp>
-      </footer>
-    </>
+
+    </div>
   )
 }

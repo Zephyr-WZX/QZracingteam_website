@@ -139,7 +139,7 @@ export default function Navbar() {
     <>
       <nav
         ref={navRef}
-        className={`fixed top-0 left-0 right-0 transition-all duration-500 backdrop-blur-xl ${
+        className={`site-nav fixed top-0 left-0 right-0 transition-all duration-500 backdrop-blur-xl ${
           menuOpen ? 'z-[60]' : 'z-50'
         } ${scrolled ? 'py-3' : 'py-5'}`}
       >
@@ -152,6 +152,7 @@ export default function Navbar() {
               onClick={handleLogoClick}
             >
               <img src={assetPath('icons/teamlogo.svg')} alt="QZ Racing" className="w-7 h-7 sm:w-8 sm:h-8 brightness-0 invert" />
+              <span className="nav-wordmark"><strong>QZ RACING</strong><span>ZHEJIANG UNIVERSITY</span></span>
             </a>
           )}
 
@@ -180,7 +181,7 @@ export default function Navbar() {
             {!menuOpen && (
               <button
                 onClick={() => handleMenuClick('contact')}
-                className="nav-capsule px-5 text-xs font-medium tracking-wider"
+                className="nav-capsule nav-contact px-5 text-xs font-medium tracking-wider"
               >
                 联系我们
               </button>
